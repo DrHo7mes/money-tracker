@@ -150,14 +150,14 @@
       <!-- صفحات و نماها -->
       <main class="flex-1 px-5 py-4 space-y-5">
 
-        <!-- ================= تب ۱: داشبورد (دقیقاً مطابق ستون اول تصویر) ================= -->
+        <!-- ================= تب ۱: داشبورد ================= -->
         <section id="view-dashboard" class="space-y-5">
-          <!-- کارت سبز تیره موجودی کل با آیکون‌های متناسب با عکس -->
+          <!-- کارت سبز تیره موجودی کل با قابلیت مخفی‌سازی با آیکون چشم -->
           <div class="bg-[#123e37] text-white p-5 rounded-3xl shadow-lg relative overflow-hidden">
             <div class="flex justify-between items-center text-emerald-200/80 mb-3">
               <span class="text-xs font-medium">موجودی کل</span>
               <div class="flex items-center gap-2">
-                <button class="text-emerald-300/80 hover:text-white transition text-sm">👁️</button>
+                <button type="button" onclick="toggleBalanceVisibility()" id="balance-eye-btn" class="text-emerald-300/80 hover:text-white transition text-sm p-1" title="مخفی‌سازی/نمایش موجودی">👁️</button>
                 <button class="text-emerald-300/80 hover:text-white transition text-sm">📊</button>
               </div>
             </div>
@@ -169,7 +169,7 @@
 
           <!-- دو کارت خلاصه دخل و خرج ماه جاری -->
           <div class="grid grid-cols-2 gap-3">
-            <!-- هزینه ماه جاری (کارت قرمز ملایم) -->
+            <!-- هزینه ماه جاری -->
             <div class="bg-rose-50/60 border border-rose-100/80 p-4 rounded-3xl flex flex-col justify-between">
               <div class="flex items-center justify-between text-[11px] text-rose-500 font-semibold mb-2">
                 <span>هزینه ماه جاری</span>
@@ -181,7 +181,7 @@
               </div>
             </div>
 
-            <!-- درآمد ماه جاری (کارت سبز ملایم) -->
+            <!-- درآمد ماه جاری -->
             <div class="bg-emerald-50/60 border border-emerald-100/80 p-4 rounded-3xl flex flex-col justify-between">
               <div class="flex items-center justify-between text-[11px] text-emerald-600 font-semibold mb-2">
                 <span>درآمد ماه جاری</span>
@@ -194,17 +194,14 @@
             </div>
           </div>
 
-          <!-- بخش نمودار دایره‌ای توزیع هزینه‌ها (دقیقاً مشابه نمودار ستون اول تصویر) -->
+          <!-- بخش نمودار دایره‌ای توزیع هزینه‌ها -->
           <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
             <h4 class="font-bold text-slate-800 text-xs mb-4">توزیع هزینه‌ها</h4>
             
             <div class="flex items-center justify-between gap-4">
-              <!-- نمودار دونات دایره‌ای -->
               <div class="w-32 h-32 relative flex-shrink-0">
                 <canvas id="dashExpenseChart"></canvas>
               </div>
-              
-              <!-- لیست لژاند و درصدهای هزینه‌ها در کنار نمودار -->
               <div id="dash-exp-list" class="flex-1 space-y-2"></div>
             </div>
             <div id="dash-exp-empty" class="text-xs text-slate-400 text-center py-4 hidden">هنوز هزینه‌ای ثبت نشده است.</div>
@@ -256,7 +253,7 @@
           </div>
         </section>
 
-        <!-- ================= تب ۲: حساب‌ها (مطابق ستون دوم تصویر) ================= -->
+        <!-- ================= تب ۲: حساب‌ها ================= -->
         <section id="view-accounts" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">حساب‌ها</h2>
@@ -265,7 +262,7 @@
           <div id="full-accounts-list" class="space-y-2.5"></div>
         </section>
 
-        <!-- ================= تب ۳: درآمد (مطابق ستون سوم تصویر) ================= -->
+        <!-- ================= تب ۳: درآمد ================= -->
         <section id="view-income" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">درآمد</h2>
@@ -275,7 +272,6 @@
             </button>
           </div>
           
-          <!-- جمع درآمد ماه جاری -->
           <div class="bg-emerald-50/70 border border-emerald-100 p-4 rounded-2xl flex items-center justify-between">
             <div>
               <span class="text-xs text-slate-500 font-medium">جمع درآمد ماه جاری</span>
@@ -288,7 +284,7 @@
           <div id="income-history-list" class="space-y-2.5"></div>
         </section>
 
-        <!-- ================= تب ۴: هزینه (مطابق ستون چهارم تصویر) ================= -->
+        <!-- ================= تب ۴: هزینه ================= -->
         <section id="view-expense" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">هزینه</h2>
@@ -298,10 +294,9 @@
             </button>
           </div>
 
-          <!-- دسته‌بندی‌های سریع با آیکون‌های گرد رنگی مشابه تصویر -->
           <div class="grid grid-cols-4 gap-2.5 pt-2">
             <div onclick="quickCategoryExpense('مسکن')" class="flex flex-col items-center gap-1.5 cursor-pointer group">
-              <div class="w-13 h-13 w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl group-hover:scale-105 transition">🏠</div>
+              <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl group-hover:scale-105 transition">🏠</div>
               <span class="text-[11px] font-medium text-slate-600">مسکن</span>
             </div>
             <div onclick="quickCategoryExpense('حمل و نقل')" class="flex flex-col items-center gap-1.5 cursor-pointer group">
@@ -322,7 +317,7 @@
           <div id="expense-history-list" class="space-y-2.5"></div>
         </section>
 
-        <!-- ================= تب ۵: انتقال بین حساب‌ها (مطابق ستون پنجم تصویر) ================= -->
+        <!-- ================= تب ۵: انتقال بین حساب‌ها ================= -->
         <section id="view-transfer" class="space-y-4 hidden">
           <div class="flex items-center justify-between mb-2">
             <h2 class="text-lg font-black text-slate-800">انتقال بین حساب‌ها</h2>
@@ -357,14 +352,13 @@
           </div>
         </section>
 
-        <!-- ================= تب ۶: اقساط و چک‌ها (مطابق ستون ششم تصویر) ================= -->
+        <!-- ================= تب ۶: اقساط و چک‌ها ================= -->
         <section id="view-obligations" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">اقساط و چک‌ها</h2>
             <button onclick="openModal('modal-add-obligation')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-lg transition">+</button>
           </div>
 
-          <!-- تب‌سوئیچ داخلی اقساط / چک‌ها -->
           <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold">
             <button id="btn-ob-tab-loans" onclick="switchObligationInnerTab('loan')" class="flex-1 py-2 rounded-xl bg-emerald-600 text-white transition shadow-sm">اقساط</button>
             <button id="btn-ob-tab-checks" onclick="switchObligationInnerTab('check')" class="flex-1 py-2 rounded-xl text-slate-600 transition">چک‌ها</button>
@@ -373,14 +367,13 @@
           <div id="obligations-tab-list" class="space-y-2.5"></div>
         </section>
 
-        <!-- ================= تب ۷: گزارش‌ها (مطابق ستون هفتم تصویر) ================= -->
+        <!-- ================= تب ۷: گزارش‌ها ================= -->
         <section id="view-reports" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">گزارش‌ها</h2>
             <select id="report-shamsi-month-select" onchange="loadShamsiReport()" class="px-3 py-1.5 rounded-xl bg-slate-100 border-none text-xs font-bold outline-none"></select>
           </div>
 
-          <!-- خلاصه سود/زیان ماه -->
           <div class="grid grid-cols-3 gap-2 text-center">
             <div class="bg-emerald-50 border border-emerald-100 p-3 rounded-2xl">
               <span class="text-[10px] text-emerald-700 block">درآمد</span>
@@ -396,7 +389,6 @@
             </div>
           </div>
 
-          <!-- دسته‌بندی هزینه‌ها همراه با نمودار دونات مطابق ستون هفتم عکس -->
           <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
             <h4 class="font-bold text-slate-800 text-xs mb-3">دسته‌بندی هزینه‌ها</h4>
             <div class="flex items-center justify-between gap-4">
@@ -408,7 +400,6 @@
             <div id="rep-exp-chart-empty" class="text-xs text-slate-400 text-center py-4 hidden">هیچ هزینه‌ای برای این ماه ثبت نشده است.</div>
           </div>
 
-          <!-- دسته‌بندی درآمدها -->
           <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
             <h4 class="font-bold text-slate-800 text-xs mb-3">دسته‌بندی درآمدها</h4>
             <div class="flex items-center justify-between gap-4">
@@ -421,20 +412,18 @@
           </div>
         </section>
 
-        <!-- ================= تب ۸: همه تراکنش‌ها (مطابق ستون هشتم تصویر) ================= -->
+        <!-- ================= تب ۸: همه تراکنش‌ها ================= -->
         <section id="view-all-transactions" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">همه تراکنش‌ها</h2>
             <button onclick="resetAllTxFilters()" class="text-xs text-rose-500 font-medium">بازنشانی</button>
           </div>
 
-          <!-- اینپوت سرچ مطابق تصویر -->
           <div class="relative">
             <input id="filter-search-text" type="text" oninput="renderFilteredTransactions()" placeholder="جستجوی تراکنش..." class="w-full px-4 py-3 pr-10 rounded-2xl bg-slate-50 border border-slate-100 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500">
             <span class="absolute right-3.5 top-3 text-slate-400 text-sm">🔍</span>
           </div>
 
-          <!-- چیپ‌های فیلتر نوع تراکنش -->
           <div class="flex gap-2 overflow-x-auto pb-1 text-xs">
             <button id="chip-filter-all" onclick="setTxTypeFilter('all')" class="px-3.5 py-1.5 rounded-full bg-emerald-600 text-white font-bold whitespace-nowrap shadow-sm">همه</button>
             <button id="chip-filter-income" onclick="setTxTypeFilter('income')" class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap">درآمد</button>
@@ -442,7 +431,6 @@
             <button id="chip-filter-transfer" onclick="setTxTypeFilter('transfer')" class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap">انتقال</button>
           </div>
 
-          <!-- فیلترهای تکمیلی (حساب، سال، ماه، روز و مرتب‌سازی) -->
           <div class="grid grid-cols-2 gap-2 text-[11px]">
             <select id="filter-account" onchange="renderFilteredTransactions()" class="px-2.5 py-2 rounded-xl bg-slate-50 border border-slate-100 font-medium"></select>
             <select id="filter-sort-by" onchange="renderFilteredTransactions()" class="px-2.5 py-2 rounded-xl bg-slate-50 border border-slate-100 font-medium">
@@ -463,7 +451,7 @@
 
       </main>
 
-      <!-- ================= نوار ناوبری پایین صفحه (Bottom Navigation Bar) ================= -->
+      <!-- ================= نوار ناوبری پایین صفحه ================= -->
       <nav class="fixed bottom-0 max-w-md w-full bg-white/95 backdrop-blur-md border-t border-slate-100 py-2.5 px-4 flex items-center justify-between text-[10px] text-slate-400 z-40">
         <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="flex flex-col items-center gap-1 bottom-nav-active">
           <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -693,14 +681,14 @@
       </div>
       <div>
         <label class="block mb-1 text-slate-600 font-medium">دسته‌بندی</label>
-        <input id="edit-tx-cat" type="text" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium">
+        <input id="edit-tx-cat" type="text" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
       </div>
       <div>
         <label class="block mb-1 text-slate-600 font-medium">تاریخ تراکنش (شمسی)</label>
         <div class="grid grid-cols-3 gap-1.5">
-          <input id="edit-tx-year" type="number" class="px-2 py-2 rounded-xl border text-center font-bold">
-          <select id="edit-tx-month" class="px-1 py-2 rounded-xl border text-center font-bold bg-white"></select>
-          <input id="edit-tx-day" type="number" min="1" max="31" class="px-2 py-2 rounded-xl border text-center font-bold">
+          <input id="edit-tx-year" type="number" class="px-2 py-2 border rounded-xl text-center font-bold">
+          <select id="edit-tx-month" class="px-1 py-2 border rounded-xl text-center font-bold bg-white"></select>
+          <input id="edit-tx-day" type="number" min="1" max="31" class="px-2 py-2 border rounded-xl text-center font-bold">
         </div>
       </div>
       <div>
@@ -733,7 +721,7 @@
       <div>
         <label class="block mb-1 text-slate-600 font-medium">تاریخ سررسید (شمسی)</label>
         <div class="grid grid-cols-3 gap-1.5">
-          <input id="edit-ob-year" type="number" class="px-2 py-2 rounded-xl border text-center font-bold">
+          <input id="edit-ob-year" type="number" class="px-2 py-2 border rounded-xl text-center font-bold">
           <select id="edit-ob-month" class="px-1 py-2 border rounded-xl text-center font-bold bg-white"></select>
           <input id="edit-ob-day" type="number" min="1" max="31" class="px-2 py-2 border rounded-xl text-center font-bold">
         </div>
@@ -752,6 +740,7 @@
     </div>
   </div>
 
+  <!-- ================= بخش کدهای اسکریپت ================= -->
   <script>
     const SUPABASE_URL = 'https://hxwnerhpecqdqcvnvuhn.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_KnjuoFJZsAqLyebz98F9HQ_IU7G1EmJ';
@@ -769,7 +758,23 @@
     let currentObInnerTab = 'loan';
     let currentTxTypeChip = 'all';
 
-    // رنگ‌های استاندارد چارت مطابق تصویر: زرد، آبی، صورتی، بنفش، طوسی
+    // متغیرهای وضعیت مخفی‌سازی موجودی کل
+    let isBalanceHidden = false;
+    let actualTotalBalance = 0;
+
+    function toggleBalanceVisibility() {
+      isBalanceHidden = !isBalanceHidden;
+      const eyeBtn = document.getElementById('balance-eye-btn');
+      const balEl = document.getElementById('dash-total-balance');
+      if (isBalanceHidden) {
+        balEl.innerText = '••••••••';
+        eyeBtn.innerText = '🙈';
+      } else {
+        balEl.innerText = Number(actualTotalBalance).toLocaleString('fa-IR');
+        eyeBtn.innerText = '👁️';
+      }
+    }
+
     const CHART_PALETTE = ['#f59e0b', '#3b82f6', '#ec4899', '#8b5cf6', '#10b981', '#06b6d4', '#64748b'];
 
     const IRANIAN_BANKS = [
@@ -784,6 +789,234 @@
     ];
 
     const shamsiMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+
+    // توابع احراز هویت
+    function showSignUpScreen() {
+      document.getElementById('login-card').classList.add('hidden');
+      document.getElementById('confirm-email-card').classList.add('hidden');
+      document.getElementById('signup-card').classList.remove('hidden');
+    }
+
+    function showLoginScreen() {
+      document.getElementById('signup-card').classList.add('hidden');
+      document.getElementById('confirm-email-card').classList.add('hidden');
+      document.getElementById('login-card').classList.remove('hidden');
+    }
+
+    async function loginUser() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const msg = document.getElementById('login-msg');
+      msg.classList.add('hidden');
+
+      if (!email || !password) {
+        msg.innerText = 'لطفاً ایمیل و رمز عبور را وارد کنید.';
+        msg.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+        if (error) {
+          if (error.message.includes('Email not confirmed')) {
+            msg.innerText = 'ایمیل شما هنوز تایید نشده است. لطفاً ایمیل خود را بررسی کنید یا در تنظیمات Supabase تیک Confirm email را بردارید.';
+          } else if (error.message.includes('Invalid login credentials')) {
+            msg.innerText = 'ایمیل یا رمز عبور اشتباه است.';
+          } else {
+            msg.innerText = error.message;
+          }
+          msg.classList.remove('hidden');
+          return;
+        }
+
+        if (data && data.user) {
+          enterApp(data.user);
+        }
+      } catch (err) {
+        msg.innerText = 'خطای ارتباط با سرور: ' + err.message;
+        msg.classList.remove('hidden');
+      }
+    }
+
+    async function registerUser() {
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value.trim();
+      const msg = document.getElementById('signup-msg');
+      msg.classList.add('hidden');
+
+      if (!email || !password || password.length < 6) {
+        msg.className = 'text-xs text-center mt-4 text-rose-500';
+        msg.innerText = 'لطفاً یک ایمیل معتبر و رمز حداقل ۶ کاراکتری وارد نمایید.';
+        msg.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const { data, error } = await client.auth.signUp({ email, password });
+        if (error) {
+          msg.className = 'text-xs text-center mt-4 text-rose-500';
+          msg.innerText = error.message;
+          msg.classList.remove('hidden');
+          return;
+        }
+
+        if (data && data.session) {
+          enterApp(data.user);
+        } else {
+          document.getElementById('signup-card').classList.add('hidden');
+          document.getElementById('confirm-email-card').classList.remove('hidden');
+        }
+      } catch (err) {
+        msg.className = 'text-xs text-center mt-4 text-rose-500';
+        msg.innerText = 'خطای اتصال: ' + err.message;
+        msg.classList.remove('hidden');
+      }
+    }
+
+    async function logout() {
+      await client.auth.signOut();
+      document.getElementById('app-container').classList.add('hidden');
+      document.getElementById('auth-container').classList.remove('hidden');
+      showLoginScreen();
+    }
+
+    function enterApp(user) {
+      document.getElementById('auth-container').classList.add('hidden');
+      document.getElementById('app-container').classList.remove('hidden');
+      const emailName = user.email ? user.email.split('@')[0] : 'کاربر';
+      document.getElementById('user-display-name').innerText = emailName;
+      document.getElementById('user-avatar-text').innerText = emailName.substring(0, 2).toUpperCase();
+      switchTab('dashboard');
+      refreshAll();
+    }
+
+    // رندر لوگوی بانک‌ها
+    function getBankLogoHtml(nameStr, sizeClass = "w-10 h-10") {
+      const name = (nameStr || '').toLowerCase();
+
+      if (name.includes('ملت')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center flex-shrink-0 shadow-xs" title="بانک ملت">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="#e11d48" stroke-width="2.5"/>
+              <circle cx="12" cy="12" r="4.5" fill="#e11d48"/>
+              <path d="M12 3v4.5M12 16.5V21M3 12h4.5M16.5 12H21" stroke="#e11d48" stroke-width="2"/>
+            </svg>
+          </div>
+        `;
+      }
+
+      if (name.includes('سامان') || name.includes('بلو') || name.includes('blue')) {
+        const isBlue = name.includes('بلو') || name.includes('blue');
+        const bg = isBlue ? 'bg-sky-500' : 'bg-sky-50 border border-sky-100';
+        const strokeColor = isBlue ? '#ffffff' : '#0284c7';
+        return `
+          <div class="${sizeClass} rounded-2xl ${bg} flex items-center justify-center flex-shrink-0 shadow-xs" title="${isBlue ? 'بلوبانک' : 'بانک سامان'}">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="4" width="16" height="16" rx="4" stroke="${strokeColor}" stroke-width="2.2"/>
+              <circle cx="12" cy="12" r="3.5" fill="${strokeColor}"/>
+              <path d="M12 4v3.5M12 16.5V20M4 12h3.5M16.5 12H20" stroke="${strokeColor}" stroke-width="2"/>
+            </svg>
+          </div>
+        `;
+      }
+
+      if (name.includes('ملی')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0 shadow-xs" title="بانک ملی">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+              <path d="M12 6l2 4 4.5.5-3.5 3 1 4.5-4-2.5-4 2.5 1-4.5-3.5-3 4.5-.5z" fill="#b45309"/>
+            </svg>
+          </div>
+        `;
+      }
+
+      if (name.includes('صادرات')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center flex-shrink-0 shadow-xs" title="بانک صادرات">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="#1d4ed8" stroke-width="2.2"/>
+              <path d="M7 12h10M12 7l5 5-5 5" stroke="#1d4ed8" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        `;
+      }
+
+      if (name.includes('تجارت')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-cyan-50 border border-cyan-200 flex items-center justify-center flex-shrink-0 shadow-xs" title="بانک تجارت">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="#0891b2" stroke-width="2"/>
+              <circle cx="12" cy="12" r="2" fill="#0891b2"/>
+            </svg>
+          </div>
+        `;
+      }
+
+      if (name.includes('سپه')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-slate-100 border border-slate-300 flex items-center justify-center flex-shrink-0 shadow-xs" title="بانک سپه">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="4" width="16" height="16" rx="4" fill="#334155"/>
+              <circle cx="12" cy="12" r="4" fill="#f8fafc"/>
+            </svg>
+          </div>
+        `;
+      }
+
+      if (name.includes('پاسارگاد')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-neutral-900 border border-amber-400 flex items-center justify-center flex-shrink-0 shadow-xs" title="بانک پاسارگاد">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="8" stroke="#fbbf24" stroke-width="2"/>
+              <path d="M8 14l4-5 4 5" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        `;
+      }
+
+      if (name.includes('رسالت') || name.includes('مهر')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0 shadow-xs" title="بانک قرض‌الحسنه">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="#059669" stroke-width="2"/>
+              <path d="M12 7c-2.5 0-4 1.5-4 3.5 0 3 4 6.5 4 6.5s4-3.5 4-6.5c0-2-1.5-3.5-4-3.5z" fill="#059669"/>
+            </svg>
+          </div>
+        `;
+      }
+
+      if (name.includes('اسنپ') || name.includes('snapp')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-emerald-500 flex items-center justify-center flex-shrink-0 text-white font-black text-xs" title="اسنپ‌پی">
+            <span>!P</span>
+          </div>
+        `;
+      }
+
+      if (name.includes('دیجی') || name.includes('digi')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-blue-600 flex items-center justify-center flex-shrink-0 text-white font-black text-xs" title="دیجی‌پی">
+            <span>DP</span>
+          </div>
+        `;
+      }
+
+      if (name.includes('نقد') || name.includes('کیف')) {
+        return `
+          <div class="${sizeClass} rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0 text-emerald-700 text-lg">
+            💵
+          </div>
+        `;
+      }
+
+      return `
+        <div class="${sizeClass} rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-700">
+          <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+        </div>
+      `;
+    }
 
     function updateLiveReadableAmount(inputId, badgeId) {
       const input = document.getElementById(inputId);
@@ -850,10 +1083,14 @@
       initCategorySelects();
       initDateFilterSelects();
 
-      const { data: { session } } = await client.auth.getSession();
-      if (session) {
-        enterApp(session.user);
-      } else {
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        if (session && session.user) {
+          enterApp(session.user);
+        } else {
+          showLoginScreen();
+        }
+      } catch (err) {
         showLoginScreen();
       }
     });
@@ -951,80 +1188,6 @@
       (categories[type][mainVal] || []).forEach(s => subEl.innerHTML += `<option value="${s}">${s}</option>`);
     }
 
-    function showSignUpScreen() {
-      document.getElementById('login-card').classList.add('hidden');
-      document.getElementById('confirm-email-card').classList.add('hidden');
-      document.getElementById('signup-card').classList.remove('hidden');
-    }
-
-    function showLoginScreen() {
-      document.getElementById('signup-card').classList.add('hidden');
-      document.getElementById('confirm-email-card').classList.add('hidden');
-      document.getElementById('login-card').classList.remove('hidden');
-    }
-
-    async function loginUser() {
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value.trim();
-      const msg = document.getElementById('login-msg');
-      msg.classList.add('hidden');
-
-      if (!email || !password) {
-        msg.innerText = 'لطفاً ایمیل و رمز عبور را وارد کنید.';
-        msg.classList.remove('hidden');
-        return;
-      }
-
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
-      if (error) {
-        msg.innerText = error.message;
-        msg.classList.remove('hidden');
-      } else {
-        enterApp(data.user);
-      }
-    }
-
-    async function registerUser() {
-      const email = document.getElementById('signup-email').value.trim();
-      const password = document.getElementById('signup-password').value.trim();
-      const msg = document.getElementById('signup-msg');
-      msg.classList.add('hidden');
-
-      if (!email || !password || password.length < 6) {
-        msg.className = 'text-xs text-center mt-4 text-rose-500';
-        msg.innerText = 'لطفاً یک ایمیل معتبر و رمز حداقل ۶ کاراکتری وارد نمایید.';
-        msg.classList.remove('hidden');
-        return;
-      }
-
-      const { data, error } = await client.auth.signUp({ email, password });
-      if (error) {
-        msg.className = 'text-xs text-center mt-4 text-rose-500';
-        msg.innerText = error.message;
-        msg.classList.remove('hidden');
-      } else {
-        document.getElementById('signup-card').classList.add('hidden');
-        document.getElementById('confirm-email-card').classList.remove('hidden');
-      }
-    }
-
-    async function logout() {
-      await client.auth.signOut();
-      document.getElementById('app-container').classList.add('hidden');
-      document.getElementById('auth-container').classList.remove('hidden');
-      showLoginScreen();
-    }
-
-    function enterApp(user) {
-      document.getElementById('auth-container').classList.add('hidden');
-      document.getElementById('app-container').classList.remove('hidden');
-      const emailName = user.email ? user.email.split('@')[0] : 'کاربر';
-      document.getElementById('user-display-name').innerText = emailName;
-      document.getElementById('user-avatar-text').innerText = emailName.substring(0, 2).toUpperCase();
-      switchTab('dashboard');
-      refreshAll();
-    }
-
     function switchTab(tabName) {
       const tabs = ['dashboard', 'all-transactions', 'accounts', 'income', 'expense', 'transfer', 'obligations', 'reports'];
       tabs.forEach(t => {
@@ -1054,7 +1217,6 @@
       renderObligationsTab();
     }
 
-    // ۱. مدیریت حساب‌ها (کارت‌های مدرن مطابق ستون دوم تصویر)
     async function fetchAccounts() {
       const { data } = await client.from('accounts').select('*').order('created_at', { ascending: true });
       currentAccounts = data || [];
@@ -1084,19 +1246,10 @@
         transTo.innerHTML += opt;
         filterAcc.innerHTML += `<option value="${acc.id}">${acc.name}</option>`;
 
-        // لوگوی بانک / کارت مشابه تصویر
-        let iconBg = 'bg-blue-50 text-blue-600';
-        let iconChar = '🏦';
-        if (acc.name.includes('ملت')) { iconBg = 'bg-rose-50 text-rose-600'; iconChar = '🔴'; }
-        else if (acc.name.includes('سامان') || acc.name.includes('بلو')) { iconBg = 'bg-sky-50 text-sky-600'; iconChar = '💠'; }
-        else if (acc.name.includes('نقد')) { iconBg = 'bg-emerald-50 text-emerald-600'; iconChar = '💵'; }
-
         fullList.innerHTML += `
           <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between hover:border-slate-200 transition">
             <div class="flex items-center gap-3">
-              <div class="w-11 h-11 rounded-2xl ${iconBg} flex items-center justify-center text-lg font-bold">
-                ${iconChar}
-              </div>
+              ${getBankLogoHtml(acc.name, "w-11 h-11")}
               <div>
                 <h4 class="font-bold text-xs text-slate-800">${acc.name}</h4>
                 <p class="text-[10px] text-slate-400 mt-0.5">${Number(bal).toLocaleString('fa-IR')} تومان</p>
@@ -1110,7 +1263,12 @@
         `;
       });
 
-      document.getElementById('dash-total-balance').innerText = Number(total).toLocaleString('fa-IR');
+      actualTotalBalance = total;
+      if (isBalanceHidden) {
+        document.getElementById('dash-total-balance').innerText = '••••••••';
+      } else {
+        document.getElementById('dash-total-balance').innerText = Number(total).toLocaleString('fa-IR');
+      }
     }
 
     function openEditAccountModal(id, name, balance) {
@@ -1139,7 +1297,6 @@
       refreshAll();
     }
 
-    // ۲. مدیریت چک‌ها و اقساط (مطابق ستون ششم تصویر)
     async function fetchObligations() {
       const { data } = await client.from('obligations').select('*').order('due_date', { ascending: true });
       allObligations = data || [];
@@ -1210,14 +1367,11 @@
       filtered.forEach(ob => {
         const obSh = parseIsoToShamsi(ob.due_date);
         const isPaid = ob.status === 'paid';
-        const icon = ob.type === 'check' ? '📜' : (ob.title.includes('خودرو') ? '🚗' : '🏠');
 
         container.innerHTML += `
           <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
-                ${icon}
-              </div>
+              ${getBankLogoHtml(ob.title, "w-11 h-11")}
               <div>
                 <h4 class="font-bold text-xs text-slate-800">${ob.title}</h4>
                 <p class="text-[10px] text-slate-400 mt-0.5">مبلغ: ${Number(ob.amount).toLocaleString('fa-IR')} تومان • ${obSh.jy}/${String(obSh.jm).padStart(2,'0')}/${String(obSh.jd).padStart(2,'0')}</p>
@@ -1364,7 +1518,6 @@
       }
     }
 
-    // ۳. ثبت درآمد، هزینه و انتقال
     async function submitIncome() {
       const amount = parseFloat(document.getElementById('inc-amount').value || 0);
       const accId = document.getElementById('inc-account').value;
@@ -1471,7 +1624,6 @@
       switchTab('dashboard');
     }
 
-    // ۴. بارگذاری آمار، تراکنش‌ها و نمودارهای دایره‌ای
     async function loadDashboardStats() {
       const { data: txs } = await client.from('transactions').select('*').order('transaction_date', { ascending: false });
       allTransactions = txs || [];
@@ -1494,7 +1646,6 @@
       document.getElementById('dash-total-income').innerText = Number(totalInc).toLocaleString('fa-IR');
       document.getElementById('dash-total-expense').innerText = Number(totalExp).toLocaleString('fa-IR');
 
-      // حساب‌های پرتکرار (حداکثر ۴ حساب)
       const sortedAccs = [...currentAccounts].sort((a, b) => (accUsage[b.id] || 0) - (accUsage[a.id] || 0)).slice(0, 4);
       const freqContainer = document.getElementById('frequent-accounts-list');
       freqContainer.innerHTML = '';
@@ -1515,7 +1666,6 @@
         `;
       });
 
-      // تراکنش‌های اخیر داشبورد
       const recentList = document.getElementById('dash-recent-tx-list');
       recentList.innerHTML = '';
       allTransactions.slice(0, 5).forEach(t => {
@@ -1528,24 +1678,28 @@
       const isExp = t.from_account_id !== null && !isTransfer;
       const amt = parseFloat(t.amount);
 
-      let iconBg = isExp ? 'bg-amber-50 text-amber-600' : (isTransfer ? 'bg-sky-50 text-sky-600' : 'bg-emerald-50 text-emerald-600');
-      let icon = isExp ? '🍴' : (isTransfer ? '🔄' : '💰');
-      if (t.category_name?.includes('مسکن')) icon = '🏠';
-      else if (t.category_name?.includes('حمل')) icon = '🚗';
-      else if (t.category_name?.includes('پوشاک')) icon = '👕';
+      let logoHtml = '';
+      if (isTransfer) {
+        logoHtml = `
+          <div class="w-10 h-10 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 flex-shrink-0">
+            🔄
+          </div>
+        `;
+      } else {
+        const matchedAcc = currentAccounts.find(a => a.id === (isExp ? t.from_account_id : t.to_account_id));
+        logoHtml = getBankLogoHtml(matchedAcc ? matchedAcc.name : t.category_name, "w-10 h-10");
+      }
 
       return `
         <div class="bg-slate-50/70 p-3.5 rounded-2xl flex items-center justify-between hover:bg-slate-100/70 transition">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl ${iconBg} flex items-center justify-center text-base">
-              ${icon}
-            </div>
-            <div>
-              <h5 class="font-bold text-xs text-slate-800">${t.category_name || t.description || 'تراکنش'}</h5>
-              <p class="text-[10px] text-slate-400 mt-0.5">${formatToShamsiDate(t.transaction_date)} • ${t.description || '-'}</p>
+          <div class="flex items-center gap-3 min-w-0">
+            ${logoHtml}
+            <div class="min-w-0">
+              <h5 class="font-bold text-xs text-slate-800 truncate">${t.category_name || t.description || 'تراکنش'}</h5>
+              <p class="text-[10px] text-slate-400 mt-0.5 truncate">${formatToShamsiDate(t.transaction_date)} • ${t.description || '-'}</p>
             </div>
           </div>
-          <div class="text-left flex items-center gap-2">
+          <div class="text-left flex items-center gap-2 flex-shrink-0">
             <div>
               <span class="font-black text-xs block ${isExp ? 'text-rose-500' : (isTransfer ? 'text-sky-600' : 'text-emerald-600')}">
                 ${isExp ? '-' : (isTransfer ? '' : '+')}${Number(amt).toLocaleString('fa-IR')}
@@ -1585,7 +1739,6 @@
       });
     }
 
-    // نمودار دونات داشبورد دقیقاً مانند تصویر (با حاشیه سفید و برش ضخیم وسط)
     function renderDashboardCharts() {
       const expBreakdown = {};
       const incBreakdown = {};
@@ -1627,7 +1780,6 @@
       emptyEl.classList.add('hidden');
       canvas.classList.remove('hidden');
 
-      // ایجاد لژاند عمودی در کنار نمودار دقیقاً مشابه ستون اول عکس
       labels.forEach((lbl, idx) => {
         const val = values[idx];
         const pct = Math.round((val / totalAmount) * 100);
@@ -1643,7 +1795,6 @@
         `;
       });
 
-      // رندر نمودار با تنظیمات برش و حاشیه‌های تصویری
       return new Chart(canvas.getContext('2d'), {
         type: 'doughnut',
         data: {
@@ -1668,7 +1819,6 @@
       });
     }
 
-    // ۵. بخش همه تراکنش‌ها
     function setTxTypeFilter(type) {
       currentTxTypeChip = type;
       ['all', 'income', 'expense', 'transfer'].forEach(t => {
@@ -1837,7 +1987,6 @@
       refreshAll();
     }
 
-    // ۶. گزارش‌ها
     async function loadShamsiReport() {
       const selected = document.getElementById('report-shamsi-month-select').value;
       if (!selected) return;
