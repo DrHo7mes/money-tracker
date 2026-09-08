@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سامانه حسابداری شخصی ابری هوشمند</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- کتابخانه رسمی و استاندارد تبدیل تقویم شمسی -->
+  <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
+  <!-- فونت وزیرمتن -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+    .tab-active {
+      color: #059669 !important;
+      border-bottom: 2px solid #059669 !important;
+      font-weight: 700 !important;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+  <!-- ================= بخش ۱: احراز هویت ================= -->
+  <div id="auth-container" class="flex min-h-screen items-center justify-center p-4">
+    <!-- فرم ورود -->
+    <div id="login-card" class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-slate-100">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 mb-3 text-2xl">🔐</div>
+        <h1 class="text-xl font-black text-slate-800">ورود به حساب کاربری</h1>
+        <p class="text-xs text-slate-500 mt-1">مدیریت دخل‌وخرج، چک‌ها، اقساط و حساب‌ها</p>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">📧 ایمیل</label>
+          <input id="login-email" type="email" placeholder="example@mail.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">🔑 رمز عبور</label>
+          <input id="login-password" type="password" placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
+        </div>
+        <button onclick="loginUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-xl transition shadow-md shadow-emerald-200 text-sm">ورود به برنامه 🚀</button>
+        <button onclick="showSignUpScreen()" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-medium py-2.5 rounded-xl transition text-xs border border-slate-200">حساب کاربری ندارید؟ ساخت حساب جدید 📝</button>
+      </div>
+      <p id="login-msg" class="text-xs text-center mt-4 text-rose-500 hidden"></p>
+    </div>
+
+    <!-- فرم ثبت‌نام -->
+    <div id="signup-card" class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-slate-100 hidden">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 mb-3 text-2xl">📝</div>
+        <h1 class="text-xl font-black text-slate-800">ساخت حساب کاربری جدید</h1>
+        <p class="text-xs text-slate-500 mt-1">اطلاعات خود را وارد نمایید</p>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">📧 ایمیل</label>
+          <input id="signup-email" type="email" placeholder="example@mail.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">🔑 رمز عبور (حداقل ۶ کاراکتر)</label>
+          <input id="signup-password" type="password" placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
+        </div>
+        <button onclick="registerUser()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl transition shadow-md shadow-blue-200 text-sm">ثبت‌نام در سامانه</button>
+        <button onclick="showLoginScreen()" class="w-full text-slate-500 hover:text-slate-700 py-2 text-xs font-medium">بازگشت به ورود ←</button>
+      </div>
+      <p id="signup-msg" class="text-xs text-center mt-4 hidden"></p>
+    </div>
+
+    <!-- تأیید ایمیل -->
+    <div id="confirm-email-card" class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-slate-100 text-center hidden">
+      <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">📬</div>
+      <h2 class="text-lg font-black text-slate-800 mb-2">ایمیل فعال‌سازی ارسال شد!</h2>
+      <p class="text-xs text-slate-600 leading-relaxed mb-6">
+        یک لینک تأیید به آدرس ایمیل شما فرستاده شد. لطفاً به صندوق ورودی ایمیل خود مراجعه کرده و روی لینک کلیک کنید، سپس وارد شوید.
+      </p>
+      <button onclick="showLoginScreen()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-xl transition text-xs">بازگشت به صفحه ورود</button>
+    </div>
+  </div>
+
+  <!-- ================= بخش ۲: سامانه اصلی ================= -->
+  <div id="app-container" class="hidden">
+    <!-- هدر بالای صفحه -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">💰</span>
+          <span class="font-black text-slate-800 text-base sm:text-lg">حسابداری ابری شخصی</span>
+          <span id="current-shamsi-badge" class="bg-emerald-50 text-emerald-700 text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-emerald-100 mr-2"></span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="user-display-email" class="text-xs text-slate-500 hidden sm:inline-block"></span>
+          <button onclick="logout()" class="text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 px-3 py-1.5 rounded-xl font-medium transition flex items-center gap-1">
+            <span>🚪</span><span>خروج</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- تب‌های ناوبری -->
+      <nav class="max-w-6xl mx-auto px-4 flex gap-5 overflow-x-auto text-xs font-medium text-slate-500 border-t border-slate-100">
+        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="py-3 border-b-2 border-transparent transition tab-active flex items-center gap-1.5 whitespace-nowrap">
+          <span>📊</span><span>داشبورد</span>
+        </button>
+        <button onclick="switchTab('accounts')" id="tab-accounts" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>💳</span><span>حساب‌ها</span>
+        </button>
+        <button onclick="switchTab('income')" id="tab-income" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>📥</span><span>درآمد</span>
+        </button>
+        <button onclick="switchTab('expense')" id="tab-expense" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>📤</span><span>هزینه</span>
+        </button>
+        <button onclick="switchTab('obligations')" id="tab-obligations" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>🗓️</span><span>اقساط و چک‌ها</span>
+        </button>
+        <button onclick="switchTab('reports')" id="tab-reports" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>📈</span><span>گزارش‌ها</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- هشدار ۴۸ ساعته چک‌ها و اقساط -->
+    <div id="reminder-box" class="max-w-6xl mx-auto px-4 mt-4 hidden">
+      <div class="bg-amber-50 border-r-4 border-amber-500 p-4 rounded-2xl shadow-sm">
+        <div class="flex items-center gap-2 text-amber-900 font-bold text-xs sm:text-sm">
+          <span>⏰</span>
+          <span>یادآوری سررسید بسیار فوری (ظرف ۴۸ ساعت آینده):</span>
+        </div>
+        <ul id="reminder-items" class="mt-2 text-xs text-amber-800 space-y-1 pr-6 list-disc"></ul>
+      </div>
+    </div>
+
+    <!-- بدنه اصلی -->
+    <main class="max-w-6xl mx-auto px-4 py-6">
+
+      <!-- تب ۱: داشبورد -->
+      <section id="view-dashboard" class="space-y-6">
+        <!-- کارت‌های آمار کل -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs text-slate-500 font-medium">موجودی مجموع حساب‌ها</span>
+              <h3 id="dash-total-balance" class="text-2xl font-black text-slate-800 mt-2">۰ تومان</h3>
+            </div>
+            <div class="text-3xl bg-slate-50 p-3 rounded-2xl">💰</div>
+          </div>
+          <div class="bg-emerald-50/70 p-5 rounded-2xl border border-emerald-100 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs text-emerald-700 font-medium">کل دریافتی‌های ثبت‌شده</span>
+              <h3 id="dash-total-income" class="text-2xl font-black text-emerald-700 mt-2">۰ تومان</h3>
+            </div>
+            <div class="text-3xl bg-white/70 p-3 rounded-2xl">📥</div>
+          </div>
+          <div class="bg-rose-50/70 p-5 rounded-2xl border border-rose-100 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs text-rose-700 font-medium">کل مخارج ثبت‌شده</span>
+              <h3 id="dash-total-expense" class="text-2xl font-black text-rose-700 mt-2">۰ تومان</h3>
+            </div>
+            <div class="text-3xl bg-white/70 p-3 rounded-2xl">📤</div>
+          </div>
+        </div>
+
+        <!-- دو نمودار دایره‌ای روی داشبورد -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
+            <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-rose-600">
+              <span>🍩</span><span>سهم بخش‌های هزینه در داشبورد</span>
+            </h4>
+            <div class="w-full max-w-[220px] h-[220px] relative flex items-center justify-center">
+              <canvas id="dashExpenseChart"></canvas>
+            </div>
+            <div id="dash-exp-empty" class="text-xs text-slate-400 mt-4 hidden">هنوز هزینه‌ای ثبت نشده است.</div>
+            <div id="dash-exp-list" class="w-full mt-4 space-y-2 border-t border-slate-100 pt-3"></div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
+            <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-emerald-600">
+              <span>🍩</span><span>سهم بخش‌های درآمد در داشبورد</span>
+            </h4>
+            <div class="w-full max-w-[220px] h-[220px] relative flex items-center justify-center">
+              <canvas id="dashIncomeChart"></canvas>
+            </div>
+            <div id="dash-inc-empty" class="text-xs text-slate-400 mt-4 hidden">هنوز درآمدی ثبت نشده است.</div>
+            <div id="dash-inc-list" class="w-full mt-4 space-y-2 border-t border-slate-100 pt-3"></div>
+          </div>
+        </div>
+
+        <!-- چک‌ها و اقساط سررسید ماه جاری -->
+        <div class="bg-white rounded-2xl border border-amber-200/70 p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🗓️</span>
+              <h3 class="font-bold text-slate-800 text-sm">چک‌ها و اقساط سررسید این ماه (<span id="dash-month-name" class="text-amber-600"></span>)</h3>
+            </div>
+            <button onclick="switchTab('obligations')" class="text-xs text-amber-600 hover:text-amber-700 font-semibold">+ ثبت قسط / چک جدید</button>
+          </div>
+          <div id="dash-monthly-obligations" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
+        </div>
+
+        <!-- حساب‌های پرتکرار -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">⚡</span>
+              <div>
+                <h3 class="font-bold text-slate-800 text-sm">حساب‌های پرتکرار</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">حساب‌هایی با بیشترین حجم تراکنش</p>
+              </div>
+            </div>
+            <button onclick="switchTab('accounts')" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">همه حساب‌ها ←</button>
+          </div>
+          <div id="frequent-accounts-list" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+        </div>
+
+        <!-- آخرین تراکنش‌ها با امکان ویرایش و حذف -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+          <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-1.5">
+            <span>📋</span><span>آخرین تراکنش‌های ثبت‌شده</span>
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-50 text-slate-500 border-b border-slate-100">
+                <tr>
+                  <th class="py-2.5 px-3">نوع / دسته‌بندی</th>
+                  <th class="py-2.5 px-3">حساب</th>
+                  <th class="py-2.5 px-3">توضیحات</th>
+                  <th class="py-2.5 px-3">مبلغ (تومان)</th>
+                  <th class="py-2.5 px-3">تاریخ شمسی</th>
+                  <th class="py-2.5 px-3 text-center">عملیات</th>
+                </tr>
+              </thead>
+              <tbody id="dash-recent-tx" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- تب ۲: حساب‌ها -->
+      <section id="view-accounts" class="space-y-6 hidden">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">💳</span>
+            <h2 class="text-base font-bold text-slate-800">حساب‌های بانکی و کیف پول‌ها</h2>
+          </div>
+          <button onclick="openModal('modal-account')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-xl transition shadow-sm font-semibold flex items-center gap-1">
+            <span>+</span><span>تعریف حساب جدید</span>
+          </button>
+        </div>
+        <div id="full-accounts-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+      </section>
+
+      <!-- تب ۳: درآمد -->
+      <section id="view-income" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm max-w-xl mx-auto">
+          <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <span class="text-emerald-600 text-xl">📥</span>
+            <span>ثبت درآمد روزانه</span>
+          </h2>
+          <div class="space-y-4 text-xs">
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">💵 مبلغ دریافتی (تومان)</label>
+              <input id="inc-amount" type="number" placeholder="مثلاً: 12500000" oninput="updateLiveReadableAmount('inc-amount', 'inc-amount-badge')" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm font-bold text-slate-800">
+              <div id="inc-amount-badge" class="text-[11px] text-emerald-600 font-bold mt-1.5 hidden bg-emerald-50 py-1 px-2.5 rounded-lg border border-emerald-100"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">📂 بخش درآمد</label>
+                <select id="inc-main-cat" onchange="loadSubCats('income')" class="w-full px-3 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white"></select>
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">🏷️ زیربخش</label>
+                <select id="inc-sub-cat" class="w-full px-3 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white"></select>
+              </div>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">🏦 به موجودی کدام حساب واریز شود؟</label>
+              <select id="inc-account" class="w-full px-3 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white"></select>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">📝 توضیحات اضافه (اختیاری)</label>
+              <textarea id="inc-desc" rows="2" placeholder="جزئیات اختیاری در مورد این واریزی..." class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"></textarea>
+            </div>
+            <button onclick="submitIncome()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md shadow-emerald-200">ثبت درآمد و افزایش موجودی 🚀</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- تب ۴: هزینه -->
+      <section id="view-expense" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm max-w-xl mx-auto">
+          <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <span class="text-rose-600 text-xl">📤</span>
+            <span>ثبت هزینه روزانه</span>
+          </h2>
+          <div class="space-y-4 text-xs">
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">💸 مبلغ پرداختی (تومان)</label>
+              <input id="exp-amount" type="number" placeholder="مثلاً: 250000" oninput="updateLiveReadableAmount('exp-amount', 'exp-amount-badge')" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-rose-500 outline-none text-sm font-bold text-rose-600">
+              <div id="exp-amount-badge" class="text-[11px] text-rose-600 font-bold mt-1.5 hidden bg-rose-50 py-1 px-2.5 rounded-lg border border-rose-100"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">📂 بخش هزینه</label>
+                <select id="exp-main-cat" onchange="loadSubCats('expense')" class="w-full px-3 py-2.5 border rounded-xl focus:ring-2 focus:ring-rose-500 outline-none bg-white"></select>
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">🏷️ زیربخش</label>
+                <select id="exp-sub-cat" class="w-full px-3 py-2.5 border rounded-xl focus:ring-2 focus:ring-rose-500 outline-none bg-white"></select>
+              </div>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">💳 از موجودی کدام حساب کسر شود؟</label>
+              <select id="exp-account" class="w-full px-3 py-2.5 border rounded-xl focus:ring-2 focus:ring-rose-500 outline-none bg-white"></select>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">📝 توضیحات اضافه (اختیاری)</label>
+              <textarea id="exp-desc" rows="2" placeholder="جزئیات اختیاری بابت این خرید..." class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-rose-500 outline-none"></textarea>
+            </div>
+            <button onclick="submitExpense()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md shadow-rose-200">ثبت هزینه و کسر موجودی 🔻</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- تب ۵: اقساط و چک‌ها -->
+      <section id="view-obligations" class="space-y-6 hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm md:col-span-1">
+            <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-1.5">
+              <span>✍️</span><span>ثبت قسط یا چک جدید</span>
+            </h3>
+            <div class="space-y-3 text-xs">
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">🏢 بانک یا پلتفرم طرف حساب</label>
+                <select id="ob-provider-select" onchange="handleObligationProviderChange()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none bg-white font-medium"></select>
+                <input id="ob-custom-provider-input" type="text" placeholder="نام بانک، موسسه یا فرد را بنویسید..." class="w-full mt-2 px-3 py-2 border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none hidden bg-amber-50/40">
+              </div>
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">📌 عنوان و شرح</label>
+                <input id="ob-new-title" type="text" placeholder="عنوان چک یا قسط" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none">
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block mb-1 text-slate-600 font-medium">نوع</label>
+                  <select id="ob-new-type" class="w-full px-2 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+                    <option value="check">📜 چک</option>
+                    <option value="loan">🏦 قسط وام / لندتک</option>
+                    <option value="debt">🤝 قرض و بدهی</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block mb-1 text-slate-600 font-medium">مبلغ (تومان)</label>
+                  <input id="ob-new-amount" type="number" placeholder="مثلاً: 5000000" oninput="updateLiveReadableAmount('ob-new-amount', 'ob-amount-badge')" class="w-full px-2 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none font-bold text-slate-800">
+                </div>
+              </div>
+              <div id="ob-amount-badge" class="text-[11px] text-amber-700 font-bold hidden bg-amber-50 py-1 px-2.5 rounded-lg border border-amber-200"></div>
+
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">📅 تاریخ سررسید (شمسی)</label>
+                <div class="grid grid-cols-3 gap-1.5">
+                  <input id="ob-shamsi-year" type="number" value="1405" class="px-2 py-2 border rounded-xl text-center outline-none" title="سال">
+                  <select id="ob-shamsi-month" class="px-1 py-2 border rounded-xl text-center outline-none bg-white"></select>
+                  <input id="ob-shamsi-day" type="number" min="1" max="31" value="1" class="px-2 py-2 border rounded-xl text-center outline-none" title="روز">
+                </div>
+              </div>
+
+              <button onclick="submitObligation()" class="w-full mt-2 bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md shadow-amber-200">
+                ثبت موعد چک / قسط ⏰
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm md:col-span-2">
+            <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-1.5">
+              <span>📋</span><span>لیست تمام چک‌ها، اقساط و بدهی‌ها</span>
+            </h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-right text-xs">
+                <thead class="bg-slate-50 text-slate-500 border-b border-slate-100">
+                  <tr>
+                    <th class="py-2.5 px-3">عنوان و مرجع</th>
+                    <th class="py-2.5 px-3">نوع</th>
+                    <th class="py-2.5 px-3">مبلغ (تومان)</th>
+                    <th class="py-2.5 px-3">تاریخ سررسید</th>
+                    <th class="py-2.5 px-3">وضعیت</th>
+                    <th class="py-2.5 px-3 text-center">عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="obligations-full-table" class="divide-y divide-slate-100"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- تب ۶: گزارش‌ها -->
+      <section id="view-reports" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">📈</span>
+            <div>
+              <h3 class="font-bold text-slate-800 text-sm">گزارش مالی دوره‌ای (شمسی)</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">آنالیز جامع هزینه‌ها و درآمدهای ماهانه با نمودارهای تفکیکی سهم</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-xs text-slate-600 font-semibold">انتخاب ماه شمسی:</label>
+            <select id="report-shamsi-month-select" onchange="loadShamsiReport()" class="px-3 py-1.5 border rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 font-bold text-slate-700"></select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-emerald-50/70 p-5 rounded-2xl border border-emerald-100 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs text-emerald-700 font-medium">کل دریافتی‌های ماه</span>
+              <h3 id="rep-income" class="text-xl font-black text-emerald-700 mt-1">۰ تومان</h3>
+            </div>
+            <span class="text-2xl">📥</span>
+          </div>
+          <div class="bg-rose-50/70 p-5 rounded-2xl border border-rose-100 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs text-rose-700 font-medium">کل مخارج ماه</span>
+              <h3 id="rep-expense" class="text-xl font-black text-rose-700 mt-1">۰ تومان</h3>
+            </div>
+            <span class="text-2xl">📤</span>
+          </div>
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs text-slate-600 font-medium">تراز مالی ماه (پس‌انداز)</span>
+              <h3 id="rep-diff" class="text-xl font-black text-slate-800 mt-1">۰ تومان</h3>
+            </div>
+            <span class="text-2xl">⚖️</span>
+          </div>
+        </div>
+
+        <!-- نمودارهای دایره‌ای در تب گزارش‌ها -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
+            <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-rose-600">
+              <span>🍩</span><span>سهم درصدی هر یک از بخش‌های هزینه</span>
+            </h4>
+            <div class="w-full max-w-[240px] h-[240px] relative flex items-center justify-center">
+              <canvas id="monthlyExpenseChart"></canvas>
+            </div>
+            <div id="rep-exp-chart-empty" class="text-xs text-slate-400 mt-4 hidden">هیچ هزینه‌ای برای این ماه ثبت نشده است.</div>
+            <div id="rep-exp-breakdown-list" class="w-full mt-4 space-y-2 border-t border-slate-100 pt-3"></div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
+            <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-emerald-600">
+              <span>🍩</span><span>سهم درصدی هر یک از بخش‌های درآمد</span>
+            </h4>
+            <div class="w-full max-w-[240px] h-[240px] relative flex items-center justify-center">
+              <canvas id="monthlyIncomeChart"></canvas>
+            </div>
+            <div id="rep-inc-chart-empty" class="text-xs text-slate-400 mt-4 hidden">هیچ درآمدی برای این ماه ثبت نشده است.</div>
+            <div id="rep-inc-breakdown-list" class="w-full mt-4 space-y-2 border-t border-slate-100 pt-3"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- مودال: افزودن حساب بانکی -->
+  <div id="modal-account" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-slate-100">
+      <h3 class="font-bold text-slate-800 mb-4 text-sm flex items-center gap-1.5">
+        <span>💳</span><span>تعریف حساب بانکی جدید</span>
+      </h3>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">انتخاب نام بانک یا کیف پول</label>
+          <select id="new-acc-bank-select" onchange="handleAccountBankChange()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"></select>
+          <input id="new-acc-custom-bank" type="text" placeholder="نام بانک یا حساب خود را بنویسید..." class="w-full mt-2 px-3 py-2 border border-emerald-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none hidden bg-emerald-50/40">
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">پسوند نام حساب یا شماره کارت (اختیاری)</label>
+          <input id="new-acc-suffix" type="text" placeholder="مثلاً: کارت اصلی، پس‌انداز، ۱۲۳۴" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">موجودی اولیه (تومان)</label>
+          <input id="new-acc-balance" type="number" placeholder="مثلاً: 2500000" oninput="updateLiveReadableAmount('new-acc-balance', 'acc-balance-badge')" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-800">
+          <div id="acc-balance-badge" class="text-[11px] text-emerald-700 font-bold mt-1.5 hidden bg-emerald-50 py-1 px-2.5 rounded-lg border border-emerald-200"></div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-5">
+        <button onclick="closeModal('modal-account')" class="px-3.5 py-1.5 rounded-xl text-slate-500 hover:bg-slate-100 text-xs font-medium">انصراف</button>
+        <button onclick="saveAccount()" class="px-4 py-1.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-medium">ذخیره حساب</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ویرایش حساب بانکی -->
+  <div id="modal-edit-account" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-slate-100">
+      <h3 class="font-bold text-slate-800 mb-4 text-sm flex items-center gap-1.5">
+        <span>✏️</span><span>ویرایش حساب بانکی</span>
+      </h3>
+      <input type="hidden" id="edit-acc-id">
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">نام حساب</label>
+          <input id="edit-acc-name" type="text" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">موجودی (تومان)</label>
+          <input id="edit-acc-balance" type="number" oninput="updateLiveReadableAmount('edit-acc-balance', 'edit-acc-balance-badge')" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-800">
+          <div id="edit-acc-balance-badge" class="text-[11px] text-emerald-700 font-bold mt-1.5 hidden bg-emerald-50 py-1 px-2.5 rounded-lg border border-emerald-200"></div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-5">
+        <button onclick="closeModal('modal-edit-account')" class="px-3.5 py-1.5 rounded-xl text-slate-500 hover:bg-slate-100 text-xs font-medium">انصراف</button>
+        <button onclick="updateAccountSubmit()" class="px-4 py-1.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 text-xs font-medium">به‌روزرسانی</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ویرایش تراکنش -->
+  <div id="modal-edit-tx" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-2xl border border-slate-100">
+      <h3 class="font-bold text-slate-800 mb-4 text-sm flex items-center gap-1.5">
+        <span>✏️</span><span>ویرایش تراکنش و تاریخ</span>
+      </h3>
+      <input type="hidden" id="edit-tx-id">
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">مبلغ (تومان)</label>
+          <input id="edit-tx-amount" type="number" oninput="updateLiveReadableAmount('edit-tx-amount', 'edit-tx-amount-badge')" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-800">
+          <div id="edit-tx-amount-badge" class="text-[11px] text-emerald-700 font-bold mt-1.5 hidden bg-emerald-50 py-1 px-2.5 rounded-lg border border-emerald-200"></div>
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">دسته‌بندی</label>
+          <input id="edit-tx-cat" type="text" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">تغییر تاریخ تراکنش (شمسی)</label>
+          <div class="grid grid-cols-3 gap-1.5">
+            <input id="edit-tx-year" type="number" class="px-2 py-2 border rounded-xl text-center outline-none">
+            <select id="edit-tx-month" class="px-1 py-2 border rounded-xl text-center outline-none bg-white"></select>
+            <input id="edit-tx-day" type="number" min="1" max="31" class="px-2 py-2 border rounded-xl text-center outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">توضیحات</label>
+          <input id="edit-tx-desc" type="text" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-5">
+        <button onclick="closeModal('modal-edit-tx')" class="px-3.5 py-1.5 rounded-xl text-slate-500 hover:bg-slate-100 text-xs font-medium">انصراف</button>
+        <button onclick="updateTxSubmit()" class="px-4 py-1.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 text-xs font-medium">ذخیره تغییرات</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ویرایش چک یا قسط -->
+  <div id="modal-edit-ob" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-slate-100">
+      <h3 class="font-bold text-slate-800 mb-4 text-sm flex items-center gap-1.5">
+        <span>✏️</span><span>ویرایش چک یا قسط و تاریخ</span>
+      </h3>
+      <input type="hidden" id="edit-ob-id">
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">عنوان</label>
+          <input id="edit-ob-title" type="text" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none">
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">مبلغ (تومان)</label>
+          <input id="edit-ob-amount" type="number" oninput="updateLiveReadableAmount('edit-ob-amount', 'edit-ob-amount-badge')" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none font-bold text-slate-800">
+          <div id="edit-ob-amount-badge" class="text-[11px] text-amber-700 font-bold mt-1.5 hidden bg-amber-50 py-1 px-2.5 rounded-lg border border-amber-200"></div>
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">تاریخ سررسید (شمسی)</label>
+          <div class="grid grid-cols-3 gap-1.5">
+            <input id="edit-ob-year" type="number" class="px-2 py-2 border rounded-xl text-center outline-none">
+            <select id="edit-ob-month" class="px-1 py-2 border rounded-xl text-center outline-none bg-white"></select>
+            <input id="edit-ob-day" type="number" min="1" max="31" class="px-2 py-2 border rounded-xl text-center outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">وضعیت</label>
+          <select id="edit-ob-status" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+            <option value="pending">در انتظار پرداخت</option>
+            <option value="paid">پرداخت شده</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-5">
+        <button onclick="closeModal('modal-edit-ob')" class="px-3.5 py-1.5 rounded-xl text-slate-500 hover:bg-slate-100 text-xs font-medium">انصراف</button>
+        <button onclick="updateObSubmit()" class="px-4 py-1.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 text-xs font-medium">ذخیره تغییرات</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://hxwnerhpecqdqcvnvuhn.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_KnjuoFJZsAqLyebz98F9HQ_IU7G1EmJ';
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentAccounts = [];
+    let allObligations = [];
+    let allTransactions = [];
+    
+    let repExpChart = null;
+    let repIncChart = null;
+    let dashExpChart = null;
+    let dashIncChart = null;
+
+    const IRANIAN_BANKS = [
+      'بانک ملی ایران', 'بانک ملت', 'بانک صادرات ایران', 'بانک تجارت', 'بانک سپه',
+      'بانک پاسارگاد', 'بانک سامان', 'بلوبانک (سامان)', 'بانک رسالت', 'بانک قرض‌الحسنه مهر ایران',
+      'بانک پارسیان', 'بانک آینده', 'بانک شهر', 'بانک رفاه کارگران', 'بانک کشاورزی',
+      'بانک مسکن', 'بانک اقتصاد نوین', 'بانک سینا', 'بانک دی', 'بانک گردشگری',
+      'بانک کارآفرین', 'بانک خاورمیانه', 'پست بانک ایران', 'کیف پول نقد', '✏️ سایر (تایپ دستی نام بانک)'
+    ];
+
+    const OBLIGATION_PROVIDERS = [
+      'اسنپ‌پی (SnappPay)', 'دیجی‌پی (DigiPay)', 'تارا (Tara)', 'ازکی‌وام (AzkiVam)',
+      'لندو (Lando)', 'وام‌بانکی - بانک رسالت', 'وام‌بانکی - بانک مهر ایران', 'وام مسکن (بانک مسکن)',
+      'بانک ملی', 'بانک ملت', 'بانک صادرات', 'بانک تجارت', 'بانک سپه',
+      'بانک پاسارگاد', 'بانک سامان', 'شخصی / قرض متفرقه', '✏️ سایر (تایپ دستی نام موسسه/فرد)'
+    ];
+
+    const shamsiMonths = [
+      'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+      'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
+    ];
+
+    function updateLiveReadableAmount(inputId, badgeId) {
+      const input = document.getElementById(inputId);
+      const badge = document.getElementById(badgeId);
+      if (!input || !badge) return;
+
+      const raw = input.value.trim();
+      const num = parseFloat(raw);
+
+      if (!raw || isNaN(num) || num <= 0) {
+        badge.classList.add('hidden');
+        badge.innerText = '';
+        return;
+      }
+
+      badge.innerText = `👈 خوانش مبلغ: ${Number(num).toLocaleString('fa-IR')} تومان`;
+      badge.classList.remove('hidden');
+    }
+
+    // ================= تبدیل تاریخ با کتابخانه رسمی jalaali-js بدون خطای Timezone =================
+    function getTodayShamsi() {
+      const now = new Date();
+      return jalaali.toJalaali(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    }
+
+    function shamsiToIsoDate(jy, jm, jd) {
+      const g = jalaali.toGregorian(parseInt(jy, 10), parseInt(jm, 10), parseInt(jd, 10));
+      return `${g.gy}-${String(g.gm).padStart(2, '0')}-${String(g.gd).padStart(2, '0')}`;
+    }
+
+    function parseIsoToShamsi(dateStr) {
+      if (!dateStr) return getTodayShamsi();
+      const raw = dateStr.substring(0, 10);
+      const parts = raw.split('-');
+      if (parts.length === 3) {
+        return jalaali.toJalaali(parseInt(parts[0], 10), parseInt(parts[1], 10), parseInt(parts[2], 10));
+      }
+      const d = new Date(dateStr);
+      return jalaali.toJalaali(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    }
+
+    function formatToShamsiDate(dateInput) {
+      if (!dateInput) return '-';
+      const sh = parseIsoToShamsi(dateInput);
+      return `${sh.jy}/${String(sh.jm).padStart(2, '0')}/${String(sh.jd).padStart(2, '0')}`;
+    }
+
+    const categories = {
+      expense: {
+        '🛒 خرید': ['خرید مواد غذایی', 'خرید لوازم منزل', 'پوشاک و کیف و کفش', 'هدیه و کادو', 'کافه و رستوران', 'متفرقه'],
+        '🏦 پرداخت قسط': ['قسط وام مسکن', 'قسط اسنپ‌پی / دیجی‌پی', 'قسط خودرو', 'قسط وام بانکی', 'سایر اقساط'],
+        '📜 پرداخت چک': ['چک خرید کالا', 'چک بازار', 'سایر چک‌ها'],
+        '🤝 پرداخت قرض': ['تسویه قرض دوستان', 'تسویه بدهی اقوام', 'متفرقه']
+      },
+      income: {
+        '💼 حقوق': ['حقوق ماهانه', 'اضافه‌کاری', 'پاداش و عیدی'],
+        '🤝 قرض': ['وصول طلب', 'دریافت وام/قرض'],
+        '📈 سایر درآمدها': ['سود سپرده بانکی', 'سود بازار سرمایه', 'فروش کالا', 'متفرقه']
+      }
+    };
+
+    window.addEventListener('load', async () => {
+      initBankSelects();
+      initShamsiSelectors();
+      initCategorySelects();
+
+      const { data: { session } } = await client.auth.getSession();
+      if (session) {
+        enterApp(session.user);
+      } else {
+        showLoginScreen();
+      }
+    });
+
+    function initBankSelects() {
+      const bankSelect = document.getElementById('new-acc-bank-select');
+      bankSelect.innerHTML = '';
+      IRANIAN_BANKS.forEach(b => bankSelect.innerHTML += `<option value="${b}">${b}</option>`);
+
+      const providerSelect = document.getElementById('ob-provider-select');
+      providerSelect.innerHTML = '';
+      OBLIGATION_PROVIDERS.forEach(p => providerSelect.innerHTML += `<option value="${p}">${p}</option>`);
+    }
+
+    function handleAccountBankChange() {
+      const val = document.getElementById('new-acc-bank-select').value;
+      const customInput = document.getElementById('new-acc-custom-bank');
+      if (val.includes('سایر')) {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+      } else {
+        customInput.classList.add('hidden');
+      }
+    }
+
+    function handleObligationProviderChange() {
+      const val = document.getElementById('ob-provider-select').value;
+      const customInput = document.getElementById('ob-custom-provider-input');
+      const titleInput = document.getElementById('ob-new-title');
+
+      if (val.includes('سایر')) {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+      } else {
+        customInput.classList.add('hidden');
+        if (!titleInput.value) {
+          titleInput.value = `قسط / چک ${val}`;
+        }
+      }
+    }
+
+    function initShamsiSelectors() {
+      const currentSh = getTodayShamsi();
+      
+      document.getElementById('current-shamsi-badge').innerText = `📅 امروز: ${currentSh.jd} ${shamsiMonths[currentSh.jm - 1]} ${currentSh.jy}`;
+      document.getElementById('dash-month-name').innerText = `${shamsiMonths[currentSh.jm - 1]} ${currentSh.jy}`;
+
+      const obMonthSel = document.getElementById('ob-shamsi-month');
+      obMonthSel.innerHTML = '';
+      shamsiMonths.forEach((m, idx) => {
+        obMonthSel.innerHTML += `<option value="${idx + 1}" ${idx + 1 === currentSh.jm ? 'selected' : ''}>${m}</option>`;
+      });
+      document.getElementById('ob-shamsi-year').value = currentSh.jy;
+      document.getElementById('ob-shamsi-day').value = currentSh.jd;
+
+      const repMonthSel = document.getElementById('report-shamsi-month-select');
+      repMonthSel.innerHTML = '';
+      shamsiMonths.forEach((m, idx) => {
+        repMonthSel.innerHTML += `<option value="${currentSh.jy}-${idx + 1}" ${idx + 1 === currentSh.jm ? 'selected' : ''}>${m} ${currentSh.jy}</option>`;
+      });
+    }
+
+    function initCategorySelects() {
+      const incMain = document.getElementById('inc-main-cat');
+      const expMain = document.getElementById('exp-main-cat');
+      incMain.innerHTML = '';
+      expMain.innerHTML = '';
+
+      Object.keys(categories.income).forEach(c => incMain.innerHTML += `<option value="${c}">${c}</option>`);
+      Object.keys(categories.expense).forEach(c => expMain.innerHTML += `<option value="${c}">${c}</option>`);
+
+      loadSubCats('income');
+      loadSubCats('expense');
+    }
+
+    function loadSubCats(type) {
+      const mainVal = document.getElementById(type === 'income' ? 'inc-main-cat' : 'exp-main-cat').value;
+      const subEl = document.getElementById(type === 'income' ? 'inc-sub-cat' : 'exp-sub-cat');
+      subEl.innerHTML = '';
+      (categories[type][mainVal] || []).forEach(s => subEl.innerHTML += `<option value="${s}">${s}</option>`);
+    }
+
+    function showSignUpScreen() {
+      document.getElementById('login-card').classList.add('hidden');
+      document.getElementById('confirm-email-card').classList.add('hidden');
+      document.getElementById('signup-card').classList.remove('hidden');
+    }
+
+    function showLoginScreen() {
+      document.getElementById('signup-card').classList.add('hidden');
+      document.getElementById('confirm-email-card').classList.add('hidden');
+      document.getElementById('login-card').classList.remove('hidden');
+    }
+
+    async function loginUser() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const msg = document.getElementById('login-msg');
+      msg.classList.add('hidden');
+
+      if (!email || !password) {
+        msg.innerText = 'لطفاً ایمیل و رمز عبور را وارد کنید.';
+        msg.classList.remove('hidden');
+        return;
+      }
+
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      if (error) {
+        msg.innerText = error.message;
+        msg.classList.remove('hidden');
+      } else {
+        enterApp(data.user);
+      }
+    }
+
+    async function registerUser() {
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value.trim();
+      const msg = document.getElementById('signup-msg');
+      msg.classList.add('hidden');
+
+      if (!email || !password || password.length < 6) {
+        msg.className = 'text-xs text-center mt-4 text-rose-500';
+        msg.innerText = 'لطفاً یک ایمیل معتبر و رمز عبور حداقل ۶ کاراکتری وارد نمایید.';
+        msg.classList.remove('hidden');
+        return;
+      }
+
+      const { data, error } = await client.auth.signUp({ email, password });
+      if (error) {
+        msg.className = 'text-xs text-center mt-4 text-rose-500';
+        msg.innerText = error.message;
+        msg.classList.remove('hidden');
+      } else {
+        document.getElementById('signup-card').classList.add('hidden');
+        document.getElementById('confirm-email-card').classList.remove('hidden');
+      }
+    }
+
+    async function logout() {
+      await client.auth.signOut();
+      document.getElementById('app-container').classList.add('hidden');
+      document.getElementById('auth-container').classList.remove('hidden');
+      showLoginScreen();
+    }
+
+    function enterApp(user) {
+      document.getElementById('auth-container').classList.add('hidden');
+      document.getElementById('app-container').classList.remove('hidden');
+      document.getElementById('user-display-email').innerText = user.email;
+      switchTab('dashboard');
+      refreshAll();
+    }
+
+    function switchTab(tabName) {
+      ['dashboard', 'accounts', 'income', 'expense', 'obligations', 'reports'].forEach(tab => {
+        document.getElementById(`view-${tab}`).classList.add('hidden');
+        document.getElementById(`tab-${tab}`).classList.remove('tab-active');
+      });
+
+      document.getElementById(`view-${tabName}`).classList.remove('hidden');
+      document.getElementById(`tab-${tabName}`).classList.add('tab-active');
+
+      if (tabName === 'reports') {
+        setTimeout(() => loadShamsiReport(), 50);
+      }
+      if (tabName === 'dashboard') {
+        setTimeout(() => renderDashboardCharts(), 50);
+      }
+    }
+
+    async function refreshAll() {
+      await Promise.all([
+        fetchAccounts(),
+        fetchObligations(),
+        loadDashboardStats()
+      ]);
+      renderDashboardCharts();
+    }
+
+    // ۱. مدیریت حساب‌ها
+    async function fetchAccounts() {
+      const { data } = await client.from('accounts').select('*').order('created_at', { ascending: true });
+      currentAccounts = data || [];
+
+      const incSelect = document.getElementById('inc-account');
+      const expSelect = document.getElementById('exp-account');
+      const fullList = document.getElementById('full-accounts-list');
+      
+      incSelect.innerHTML = '';
+      expSelect.innerHTML = '';
+      fullList.innerHTML = '';
+
+      let total = 0;
+      currentAccounts.forEach(acc => {
+        total += parseFloat(acc.balance || 0);
+        const opt = `<option value="${acc.id}">${acc.name} (موجودی: ${Number(acc.balance).toLocaleString('fa-IR')} ت)</option>`;
+        incSelect.innerHTML += opt;
+        expSelect.innerHTML += opt;
+
+        fullList.innerHTML += `
+          <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+              <span class="text-xs text-slate-500 font-medium">💳 ${acc.name}</span>
+              <div class="flex gap-2">
+                <button onclick="openEditAccountModal('${acc.id}', '${acc.name}', ${acc.balance})" class="text-slate-400 hover:text-blue-600 text-xs p-1" title="ویرایش">✏️</button>
+                <button onclick="deleteAccount('${acc.id}', '${acc.name}')" class="text-slate-400 hover:text-rose-600 text-xs p-1" title="حذف">🗑️</button>
+              </div>
+            </div>
+            <span class="text-lg font-black text-emerald-600 mt-2">${Number(acc.balance).toLocaleString('fa-IR')} تومان</span>
+          </div>
+        `;
+      });
+
+      document.getElementById('dash-total-balance').innerText = `${Number(total).toLocaleString('fa-IR')} تومان`;
+    }
+
+    function openEditAccountModal(id, name, balance) {
+      document.getElementById('edit-acc-id').value = id;
+      document.getElementById('edit-acc-name').value = name;
+      document.getElementById('edit-acc-balance').value = balance;
+      updateLiveReadableAmount('edit-acc-balance', 'edit-acc-balance-badge');
+      openModal('modal-edit-account');
+    }
+
+    async function updateAccountSubmit() {
+      const id = document.getElementById('edit-acc-id').value;
+      const name = document.getElementById('edit-acc-name').value.trim();
+      const balance = parseFloat(document.getElementById('edit-acc-balance').value || 0);
+
+      if (!name) return alert('نام حساب الزامی است.');
+
+      const { error } = await client.from('accounts').update({ name, balance }).eq('id', id);
+      if (error) return alert('خطا در به‌روزرسانی: ' + error.message);
+
+      closeModal('modal-edit-account');
+      refreshAll();
+    }
+
+    async function deleteAccount(id, name) {
+      if (!confirm(`آیا از حذف حساب "${name}" اطمینان دارید؟`)) return;
+      const { error } = await client.from('accounts').delete().eq('id', id);
+      if (error) return alert('خطا در حذف حساب: ' + error.message);
+      refreshAll();
+    }
+
+    // ۲. مدیریت چک‌ها و اقساط با تاریخ کاملاً دقیق
+    async function fetchObligations() {
+      const { data } = await client.from('obligations').select('*').order('due_date', { ascending: true });
+      allObligations = data || [];
+
+      const tableBody = document.getElementById('obligations-full-table');
+      const dashMonthlyBox = document.getElementById('dash-monthly-obligations');
+      tableBody.innerHTML = '';
+      dashMonthlyBox.innerHTML = '';
+
+      const currentSh = getTodayShamsi();
+      let monthlyCount = 0;
+      const typeIcons = { check: '📜 چک', loan: '🏦 قسط', debt: '🤝 بدهی' };
+
+      allObligations.forEach(ob => {
+        const obSh = parseIsoToShamsi(ob.due_date);
+        const isPaid = ob.status === 'paid';
+
+        tableBody.innerHTML += `
+          <tr class="hover:bg-slate-50">
+            <td class="py-2.5 px-3 font-semibold text-slate-800">${ob.title}</td>
+            <td class="py-2.5 px-3 text-slate-500">${typeIcons[ob.type] || ob.type}</td>
+            <td class="py-2.5 px-3 font-bold text-amber-600">${Number(ob.amount).toLocaleString('fa-IR')}</td>
+            <td class="py-2.5 px-3 font-medium text-slate-600">${obSh.jy}/${String(obSh.jm).padStart(2,'0')}/${String(obSh.jd).padStart(2,'0')}</td>
+            <td class="py-2.5 px-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isPaid ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+                ${isPaid ? 'پرداخت شده' : 'در انتظار سررسید'}
+              </span>
+            </td>
+            <td class="py-2.5 px-3 text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                ${!isPaid ? `<button onclick="settleObligationPrompt('${ob.id}', ${ob.amount}, '${ob.title}')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold ml-1">پرداخت</button>` : ''}
+                <button onclick="openEditObligationModal('${ob.id}', '${ob.title}', ${ob.amount}, '${ob.status}', '${ob.due_date}')" class="text-slate-400 hover:text-blue-600 p-1" title="ویرایش">✏️</button>
+                <button onclick="deleteObligation('${ob.id}', '${ob.title}')" class="text-slate-400 hover:text-rose-600 p-1" title="حذف">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+
+        // فیلتر برای ماه جاری
+        if (obSh.jy === currentSh.jy && obSh.jm === currentSh.jm) {
+          monthlyCount++;
+          dashMonthlyBox.innerHTML += `
+            <div class="border ${isPaid ? 'border-emerald-100 bg-emerald-50/40' : 'border-amber-200 bg-amber-50/50'} p-3.5 rounded-xl flex flex-col justify-between">
+              <div class="flex justify-between items-start">
+                <span class="text-xs font-bold text-slate-800">${ob.title}</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-md ${isPaid ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-200 text-amber-800'} font-bold">
+                  ${isPaid ? 'پرداخت شد' : `${obSh.jd} ${shamsiMonths[obSh.jm - 1]}`}
+                </span>
+              </div>
+              <div class="mt-3 flex justify-between items-center">
+                <span class="text-xs font-black text-amber-700">${Number(ob.amount).toLocaleString('fa-IR')} ت</span>
+                ${!isPaid ? `<button onclick="settleObligationPrompt('${ob.id}', ${ob.amount}, '${ob.title}')" class="text-[11px] bg-amber-600 text-white px-2 py-1 rounded-lg hover:bg-amber-700">پرداخت</button>` : ''}
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      if (monthlyCount === 0) {
+        dashMonthlyBox.innerHTML = '<p class="text-xs text-slate-400 py-2 col-span-full">هیچ چک یا قسطی با سررسید این ماه وجود ندارد. 🎉</p>';
+      }
+
+      checkUrgentReminders();
+    }
+
+    function openEditObligationModal(id, title, amount, status, currentDateStr) {
+      document.getElementById('edit-ob-id').value = id;
+      document.getElementById('edit-ob-title').value = title;
+      document.getElementById('edit-ob-amount').value = amount;
+      document.getElementById('edit-ob-status').value = status;
+      
+      const obSh = parseIsoToShamsi(currentDateStr);
+      document.getElementById('edit-ob-year').value = obSh.jy;
+      document.getElementById('edit-ob-day').value = obSh.jd;
+
+      const mSel = document.getElementById('edit-ob-month');
+      mSel.innerHTML = '';
+      shamsiMonths.forEach((m, idx) => {
+        mSel.innerHTML += `<option value="${idx + 1}" ${idx + 1 === obSh.jm ? 'selected' : ''}>${m}</option>`;
+      });
+
+      updateLiveReadableAmount('edit-ob-amount', 'edit-ob-amount-badge');
+      openModal('modal-edit-ob');
+    }
+
+    async function updateObSubmit() {
+      const id = document.getElementById('edit-ob-id').value;
+      const title = document.getElementById('edit-ob-title').value.trim();
+      const amount = parseFloat(document.getElementById('edit-ob-amount').value || 0);
+      const status = document.getElementById('edit-ob-status').value;
+      
+      const jy = parseInt(document.getElementById('edit-ob-year').value, 10);
+      const jm = parseInt(document.getElementById('edit-ob-month').value, 10);
+      const jd = parseInt(document.getElementById('edit-ob-day').value, 10);
+
+      if (!title || !amount) return alert('عنوان و مبلغ الزامی است.');
+
+      const due_date = shamsiToIsoDate(jy, jm, jd);
+
+      const { error } = await client.from('obligations').update({ title, amount, status, due_date }).eq('id', id);
+      if (error) return alert('خطا در به‌روزرسانی: ' + error.message);
+
+      closeModal('modal-edit-ob');
+      fetchObligations();
+    }
+
+    async function deleteObligation(id, title) {
+      if (!confirm(`آیا از حذف "${title}" اطمینان دارید؟`)) return;
+      const { error } = await client.from('obligations').delete().eq('id', id);
+      if (error) return alert('خطا در حذف: ' + error.message);
+      fetchObligations();
+    }
+
+    async function submitObligation() {
+      const providerSelectVal = document.getElementById('ob-provider-select').value;
+      const customProviderVal = document.getElementById('ob-custom-provider-input').value.trim();
+      const finalProvider = providerSelectVal.includes('سایر') ? (customProviderVal || 'نامشخص') : providerSelectVal;
+
+      let title = document.getElementById('ob-new-title').value.trim();
+      const type = document.getElementById('ob-new-type').value;
+      const amount = parseFloat(document.getElementById('ob-new-amount').value || 0);
+      const jy = parseInt(document.getElementById('ob-shamsi-year').value, 10);
+      const jm = parseInt(document.getElementById('ob-shamsi-month').value, 10);
+      const jd = parseInt(document.getElementById('ob-shamsi-day').value, 10);
+      const user = (await client.auth.getUser()).data.user;
+
+      if (!title) title = `تعهد ${finalProvider}`;
+      if (!amount || amount <= 0) return alert('لطفاً مبلغ معتبر برای چک یا قسط را وارد نمایید.');
+
+      const fullTitle = `[${finalProvider}] ${title}`;
+      // تاریخ به صورت مستقیم به فرمت استاندارد YYYY-MM-DD ذخیره می‌شود
+      const due_date = shamsiToIsoDate(jy, jm, jd);
+
+      const { error } = await client.from('obligations').insert({
+        user_id: user.id,
+        title: fullTitle,
+        type,
+        amount,
+        due_date,
+        status: 'pending'
+      });
+
+      if (error) return alert('خطا در ثبت تعهد: ' + error.message);
+
+      document.getElementById('ob-new-title').value = '';
+      document.getElementById('ob-new-amount').value = '';
+      document.getElementById('ob-custom-provider-input').value = '';
+      document.getElementById('ob-amount-badge').classList.add('hidden');
+      alert('چک یا قسط با موفقیت ثبت شد.');
+      fetchObligations();
+    }
+
+    async function settleObligationPrompt(obligationId, amount, title) {
+      if (currentAccounts.length === 0) return alert('هیچ حساب بانکی فعالی ندارید!');
+
+      const accOptions = currentAccounts.map((a, i) => `${i + 1}. ${a.name} (موجودی: ${Number(a.balance).toLocaleString('fa-IR')})`).join('\n');
+      const choice = prompt(`برای پرداخت و تسویه "${title}" به مبلغ ${Number(amount).toLocaleString('fa-IR')} تومان، شماره حساب مبدأ را وارد کنید:\n${accOptions}`);
+      
+      const index = parseInt(choice, 10) - 1;
+      if (isNaN(index) || index < 0 || index >= currentAccounts.length) return;
+
+      const selectedAcc = currentAccounts[index];
+      const user = (await client.auth.getUser()).data.user;
+
+      await client.from('transactions').insert({
+        user_id: user.id,
+        amount: amount,
+        category_name: `پرداخت قسط / چک - ${title}`,
+        description: `تسویه ${title}`,
+        from_account_id: selectedAcc.id,
+        to_account_id: null,
+        obligation_id: obligationId
+      });
+
+      await client.from('accounts').update({ balance: parseFloat(selectedAcc.balance) - amount }).eq('id', selectedAcc.id);
+      await client.from('obligations').update({ status: 'paid' }).eq('id', obligationId);
+
+      alert('مبلغ از حساب کسر و وضعیت تعهد به پرداخت‌شده تغییر یافت.');
+      refreshAll();
+    }
+
+    function checkUrgentReminders() {
+      const now = new Date();
+      const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      
+      const in2Days = new Date(now.getTime() + (48 * 60 * 60 * 1000));
+      const maxStr = `${in2Days.getFullYear()}-${String(in2Days.getMonth() + 1).padStart(2, '0')}-${String(in2Days.getDate()).padStart(2, '0')}`;
+
+      const reminderBox = document.getElementById('reminder-box');
+      const reminderUl = document.getElementById('reminder-items');
+
+      const urgentItems = allObligations.filter(ob => {
+        if (ob.status === 'paid') return false;
+        const due = ob.due_date.substring(0, 10);
+        return due >= todayStr && due <= maxStr;
+      });
+
+      if (urgentItems.length > 0) {
+        reminderUl.innerHTML = '';
+        urgentItems.forEach(item => {
+          reminderUl.innerHTML += `<li><strong>${item.title}</strong> به مبلغ ${Number(item.amount).toLocaleString('fa-IR')} تومان (موعد سررسید: ${formatToShamsiDate(item.due_date)})</li>`;
+        });
+        reminderBox.classList.remove('hidden');
+      } else {
+        reminderBox.classList.add('hidden');
+      }
+    }
+
+    // ۳. ثبت تراکنش‌ها با افزایش و کسر قطعی موجودی
+    async function submitIncome() {
+      const amount = parseFloat(document.getElementById('inc-amount').value || 0);
+      const accId = document.getElementById('inc-account').value;
+      const main = document.getElementById('inc-main-cat').value;
+      const sub = document.getElementById('inc-sub-cat').value;
+      const desc = document.getElementById('inc-desc').value.trim();
+      const user = (await client.auth.getUser()).data.user;
+
+      if (!amount || amount <= 0) return alert('مبلغ معتبر وارد کنید.');
+      if (!accId) return alert('حساب بانکی را انتخاب کنید.');
+
+      const targetAcc = currentAccounts.find(a => a.id === accId);
+
+      const { error: txErr } = await client.from('transactions').insert({
+        user_id: user.id,
+        amount: amount,
+        category_name: `${main} - ${sub}`,
+        description: desc || null,
+        to_account_id: accId,
+        from_account_id: null,
+        transaction_date: new Date().toISOString()
+      });
+
+      if (txErr) return alert('خطا در ثبت درآمد: ' + txErr.message);
+
+      if (targetAcc) {
+        const newBal = parseFloat(targetAcc.balance) + amount;
+        await client.from('accounts').update({ balance: newBal }).eq('id', accId);
+      }
+
+      document.getElementById('inc-amount').value = '';
+      document.getElementById('inc-desc').value = '';
+      document.getElementById('inc-amount-badge').classList.add('hidden');
+      alert('درآمد با موفقیت ثبت شد و به حساب واریز گشت.');
+      await refreshAll();
+      switchTab('dashboard');
+    }
+
+    async function submitExpense() {
+      const amount = parseFloat(document.getElementById('exp-amount').value || 0);
+      const accId = document.getElementById('exp-account').value;
+      const main = document.getElementById('exp-main-cat').value;
+      const sub = document.getElementById('exp-sub-cat').value;
+      const desc = document.getElementById('exp-desc').value.trim();
+      const user = (await client.auth.getUser()).data.user;
+
+      if (!amount || amount <= 0) return alert('مبلغ معتبر وارد کنید.');
+      if (!accId) return alert('حساب بانکی را انتخاب کنید.');
+
+      const sourceAcc = currentAccounts.find(a => a.id === accId);
+
+      const { error: txErr } = await client.from('transactions').insert({
+        user_id: user.id,
+        amount: amount,
+        category_name: `${main} - ${sub}`,
+        description: desc || null,
+        from_account_id: accId,
+        to_account_id: null,
+        transaction_date: new Date().toISOString()
+      });
+
+      if (txErr) return alert('خطا در ثبت هزینه: ' + txErr.message);
+
+      if (sourceAcc) {
+        const newBal = parseFloat(sourceAcc.balance) - amount;
+        await client.from('accounts').update({ balance: newBal }).eq('id', accId);
+      }
+
+      document.getElementById('exp-amount').value = '';
+      document.getElementById('exp-desc').value = '';
+      document.getElementById('exp-amount-badge').classList.add('hidden');
+      alert('هزینه با موفقیت ثبت و از حساب کسر گردید.');
+      await refreshAll();
+      switchTab('dashboard');
+    }
+
+    async function loadDashboardStats() {
+      const { data: txs } = await client.from('transactions').select('*').order('transaction_date', { ascending: false });
+      allTransactions = txs || [];
+
+      let totalInc = 0, totalExp = 0;
+      const accUsage = {};
+
+      allTransactions.forEach(t => {
+        const val = parseFloat(t.amount);
+        if (t.from_account_id) {
+          totalExp += val;
+          accUsage[t.from_account_id] = (accUsage[t.from_account_id] || 0) + 1;
+        }
+        if (t.to_account_id) {
+          totalInc += val;
+          accUsage[t.to_account_id] = (accUsage[t.to_account_id] || 0) + 1;
+        }
+      });
+
+      document.getElementById('dash-total-income').innerText = `${Number(totalInc).toLocaleString('fa-IR')} تومان`;
+      document.getElementById('dash-total-expense').innerText = `${Number(totalExp).toLocaleString('fa-IR')} تومان`;
+
+      const sortedAccs = [...currentAccounts].sort((a, b) => (accUsage[b.id] || 0) - (accUsage[a.id] || 0)).slice(0, 3);
+      const freqContainer = document.getElementById('frequent-accounts-list');
+      freqContainer.innerHTML = '';
+
+      sortedAccs.forEach(acc => {
+        freqContainer.innerHTML += `
+          <div class="border border-slate-100 bg-slate-50/70 p-3.5 rounded-xl flex items-center justify-between">
+            <div>
+              <p class="font-bold text-xs text-slate-800">💳 ${acc.name}</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">${accUsage[acc.id] || 0} تراکنش انجام شده</p>
+            </div>
+            <span class="text-xs font-bold text-emerald-600">${Number(acc.balance).toLocaleString('fa-IR')} ت</span>
+          </div>
+        `;
+      });
+
+      const recentTbody = document.getElementById('dash-recent-tx');
+      recentTbody.innerHTML = '';
+      allTransactions.slice(0, 10).forEach(t => {
+        const isExp = t.from_account_id !== null;
+        const matchedAcc = currentAccounts.find(a => a.id === (isExp ? t.from_account_id : t.to_account_id));
+
+        recentTbody.innerHTML += `
+          <tr class="hover:bg-slate-50">
+            <td class="py-2 px-3 font-medium">${t.category_name || '-'}</td>
+            <td class="py-2 px-3 text-slate-500">${matchedAcc?.name || '-'}</td>
+            <td class="py-2 px-3 text-slate-400 max-w-xs truncate">${t.description || '-'}</td>
+            <td class="py-2 px-3 font-bold ${isExp ? 'text-rose-600' : 'text-emerald-600'}">
+              ${isExp ? '-' : '+'}${Number(t.amount).toLocaleString('fa-IR')}
+            </td>
+            <td class="py-2 px-3 text-slate-400 font-medium">${formatToShamsiDate(t.transaction_date)}</td>
+            <td class="py-2 px-3 text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="openEditTxModal('${t.id}', ${t.amount}, '${t.category_name || ''}', '${t.description || ''}', '${t.transaction_date}')" class="text-slate-400 hover:text-blue-600 p-1" title="ویرایش">✏️</button>
+                <button onclick="deleteTransaction('${t.id}')" class="text-slate-400 hover:text-rose-600 p-1" title="حذف">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // رسم دو نمودار دایره‌ای روی داشبورد
+    function renderDashboardCharts() {
+      const expBreakdown = {};
+      const incBreakdown = {};
+      let totalExp = 0, totalInc = 0;
+
+      allTransactions.forEach(t => {
+        const amt = parseFloat(t.amount);
+        const cat = t.category_name || 'سایر';
+        if (t.from_account_id) {
+          totalExp += amt;
+          expBreakdown[cat] = (expBreakdown[cat] || 0) + amt;
+        } else {
+          totalInc += amt;
+          incBreakdown[cat] = (incBreakdown[cat] || 0) + amt;
+        }
+      });
+
+      dashExpChart = renderSingleDoughnut('dashExpenseChart', 'dash-exp-empty', 'dash-exp-list', expBreakdown, totalExp, 'expense', dashExpChart);
+      dashIncChart = renderSingleDoughnut('dashIncomeChart', 'dash-inc-empty', 'dash-inc-list', incBreakdown, totalInc, 'income', dashIncChart);
+    }
+
+    function openEditTxModal(id, amount, cat, desc, currentTxDate) {
+      document.getElementById('edit-tx-id').value = id;
+      document.getElementById('edit-tx-amount').value = amount;
+      document.getElementById('edit-tx-cat').value = cat;
+      document.getElementById('edit-tx-desc').value = desc;
+
+      const txSh = parseIsoToShamsi(currentTxDate);
+      document.getElementById('edit-tx-year').value = txSh.jy;
+      document.getElementById('edit-tx-day').value = txSh.jd;
+
+      const mSel = document.getElementById('edit-tx-month');
+      mSel.innerHTML = '';
+      shamsiMonths.forEach((m, idx) => {
+        mSel.innerHTML += `<option value="${idx + 1}" ${idx + 1 === txSh.jm ? 'selected' : ''}>${m}</option>`;
+      });
+
+      updateLiveReadableAmount('edit-tx-amount', 'edit-tx-amount-badge');
+      openModal('modal-edit-tx');
+    }
+
+    async function updateTxSubmit() {
+      const id = document.getElementById('edit-tx-id').value;
+      const amount = parseFloat(document.getElementById('edit-tx-amount').value || 0);
+      const cat = document.getElementById('edit-tx-cat').value.trim();
+      const desc = document.getElementById('edit-tx-desc').value.trim();
+
+      const jy = parseInt(document.getElementById('edit-tx-year').value, 10);
+      const jm = parseInt(document.getElementById('edit-tx-month').value, 10);
+      const jd = parseInt(document.getElementById('edit-tx-day').value, 10);
+
+      if (!amount || amount <= 0) return alert('مبلغ نامعتبر است.');
+
+      const updatedDate = shamsiToIsoDate(jy, jm, jd);
+
+      const oldTx = allTransactions.find(t => t.id === id);
+      if (oldTx) {
+        const diff = amount - parseFloat(oldTx.amount);
+        if (diff !== 0) {
+          if (oldTx.from_account_id) {
+            const acc = currentAccounts.find(a => a.id === oldTx.from_account_id);
+            if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) - diff }).eq('id', acc.id);
+          }
+          if (oldTx.to_account_id) {
+            const acc = currentAccounts.find(a => a.id === oldTx.to_account_id);
+            if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) + diff }).eq('id', acc.id);
+          }
+        }
+      }
+
+      const { error } = await client.from('transactions').update({
+        amount: amount,
+        category_name: cat,
+        description: desc,
+        transaction_date: `${updatedDate}T12:00:00Z`
+      }).eq('id', id);
+
+      if (error) return alert('خطا در به‌روزرسانی تراکنش: ' + error.message);
+
+      closeModal('modal-edit-tx');
+      refreshAll();
+    }
+
+    async function deleteTransaction(id) {
+      if (!confirm('آیا از حذف این تراکنش مطمئن هستید؟')) return;
+      const targetTx = allTransactions.find(t => t.id === id);
+      if (targetTx) {
+        const amt = parseFloat(targetTx.amount);
+        if (targetTx.from_account_id) {
+          const acc = currentAccounts.find(a => a.id === targetTx.from_account_id);
+          if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) + amt }).eq('id', acc.id);
+        }
+        if (targetTx.to_account_id) {
+          const acc = currentAccounts.find(a => a.id === targetTx.to_account_id);
+          if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) - amt }).eq('id', acc.id);
+        }
+      }
+
+      const { error } = await client.from('transactions').delete().eq('id', id);
+      if (error) return alert('خطا در حذف تراکنش: ' + error.message);
+      refreshAll();
+    }
+
+    // ۴. بخش گزارش‌ها و نمودارهای دایره‌ای
+    async function loadShamsiReport() {
+      const selected = document.getElementById('report-shamsi-month-select').value;
+      if (!selected) return;
+
+      const [jy, jm] = selected.split('-').map(Number);
+      const daysInMonth = jalaali.jalaaliMonthLength(jy, jm);
+
+      const startDateStr = shamsiToIsoDate(jy, jm, 1);
+      const endDateStr = shamsiToIsoDate(jy, jm, daysInMonth);
+
+      const { data: txs } = await client
+        .from('transactions')
+        .select('*')
+        .gte('transaction_date', `${startDateStr}T00:00:00Z`)
+        .lte('transaction_date', `${endDateStr}T23:59:59Z`);
+
+      let mInc = 0, mExp = 0;
+      const expBreakdown = {};
+      const incBreakdown = {};
+
+      (txs || []).forEach(t => {
+        const val = parseFloat(t.amount);
+        const cat = t.category_name || 'سایر';
+        if (t.from_account_id) {
+          mExp += val;
+          expBreakdown[cat] = (expBreakdown[cat] || 0) + val;
+        } else {
+          mInc += val;
+          incBreakdown[cat] = (incBreakdown[cat] || 0) + val;
+        }
+      });
+
+      document.getElementById('rep-income').innerText = `${Number(mInc).toLocaleString('fa-IR')} تومان`;
+      document.getElementById('rep-expense').innerText = `${Number(mExp).toLocaleString('fa-IR')} تومان`;
+      const diff = mInc - mExp;
+      const diffEl = document.getElementById('rep-diff');
+      diffEl.innerText = `${Number(diff).toLocaleString('fa-IR')} تومان`;
+      diffEl.className = `text-xl font-black mt-1 ${diff >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+      repExpChart = renderSingleDoughnut('monthlyExpenseChart', 'rep-exp-chart-empty', 'rep-exp-breakdown-list', expBreakdown, mExp, 'expense', repExpChart);
+      repIncChart = renderSingleDoughnut('monthlyIncomeChart', 'rep-inc-chart-empty', 'rep-inc-breakdown-list', incBreakdown, mInc, 'income', repIncChart);
+    }
+
+    function renderSingleDoughnut(canvasId, emptyId, listId, breakdown, totalAmount, type, chartInstanceRef) {
+      const labels = Object.keys(breakdown);
+      const values = Object.values(breakdown);
+      const emptyEl = document.getElementById(emptyId);
+      const canvas = document.getElementById(canvasId);
+      const listEl = document.getElementById(listId);
+
+      listEl.innerHTML = '';
+
+      if (chartInstanceRef) {
+        chartInstanceRef.destroy();
+      }
+
+      if (labels.length === 0 || totalAmount === 0) {
+        emptyEl.classList.remove('hidden');
+        canvas.classList.add('hidden');
+        listEl.innerHTML = `<p class="text-xs text-slate-400 py-1">موردی برای نمایش ثبت نشده است.</p>`;
+        return null;
+      }
+
+      emptyEl.classList.add('hidden');
+      canvas.classList.remove('hidden');
+
+      const colors = type === 'expense' 
+        ? ['#ef4444', '#f59e0b', '#ec4899', '#8b5cf6', '#f97316', '#64748b', '#dc2626']
+        : ['#10b981', '#06b6d4', '#3b82f6', '#84cc16', '#14b8a6', '#6366f1', '#059669'];
+
+      labels.forEach((lbl, idx) => {
+        const val = values[idx];
+        const pct = ((val / totalAmount) * 100).toFixed(1);
+        listEl.innerHTML += `
+          <div class="flex items-center justify-between text-xs py-1 border-b border-slate-50">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${colors[idx % colors.length]}"></span>
+              <span class="font-medium text-slate-700">${lbl}</span>
+            </div>
+            <div>
+              <span class="text-slate-400 ml-2 font-light">(${Number(val).toLocaleString('fa-IR')} ت)</span>
+              <span class="font-bold ${type === 'expense' ? 'text-rose-600' : 'text-emerald-600'}">${pct}%</span>
+            </div>
+          </div>
+        `;
+      });
+
+      return new Chart(canvas.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: colors
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    async function saveAccount() {
+      const bankSelectVal = document.getElementById('new-acc-bank-select').value;
+      const customBankVal = document.getElementById('new-acc-custom-bank').value.trim();
+      const finalBankName = bankSelectVal.includes('سایر') ? (customBankVal || 'حساب من') : bankSelectVal;
+
+      const suffix = document.getElementById('new-acc-suffix').value.trim();
+      const balance = parseFloat(document.getElementById('new-acc-balance').value || 0);
+      const user = (await client.auth.getUser()).data.user;
+
+      const fullAccountName = suffix ? `${finalBankName} (${suffix})` : finalBankName;
+
+      await client.from('accounts').insert({ user_id: user.id, name: fullAccountName, balance });
+      closeModal('modal-account');
+      document.getElementById('new-acc-suffix').value = '';
+      document.getElementById('new-acc-custom-bank').value = '';
+      document.getElementById('new-acc-balance').value = '';
+      document.getElementById('acc-balance-badge').classList.add('hidden');
+      refreshAll();
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+  </script>
+</body>
+</html>
