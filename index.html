@@ -10,32 +10,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Supabase Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- تقویم شمسی جلالی -->
-  <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
   <!-- فونت وزیرمتن -->
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              800: '#166534',
-              900: '#14532d',
-              dark: '#123e37'
-            }
-          }
-        }
-      }
-    }
-  </script>
-
   <style>
     body { font-family: 'Vazirmatn', sans-serif; -webkit-tap-highlight-color: transparent; }
     .bottom-nav-active {
@@ -50,12 +27,13 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex justify-center selection:bg-brand-100 selection:text-brand-800">
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex justify-center selection:bg-emerald-100 selection:text-emerald-800">
 
   <div class="w-full max-w-md bg-white min-h-screen flex flex-col shadow-2xl relative pb-24">
 
     <!-- ================= بخش ۱: احراز هویت ================= -->
     <div id="auth-container" class="flex-1 flex items-center justify-center p-6 bg-slate-50">
+      <!-- ورود -->
       <div id="login-card" class="w-full bg-white rounded-3xl p-7 border border-slate-100 shadow-xl">
         <div class="text-center mb-6">
           <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 mb-3 text-2xl">🌱</div>
@@ -71,15 +49,16 @@
             <label class="block text-xs font-semibold text-slate-600 mb-1">رمز عبور</label>
             <input id="login-password" type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition">
           </div>
-          <button onclick="loginUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm mt-2 flex items-center justify-center gap-2">
+          <button type="button" onclick="loginUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm mt-2 flex items-center justify-center gap-2">
             <span>ورود به حساب</span>
             <span>←</span>
           </button>
-          <button onclick="showSignUpScreen()" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-medium py-3 rounded-2xl transition text-xs border border-slate-200">ساخت حساب کاربری جدید</button>
+          <button type="button" onclick="showSignUpScreen()" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-medium py-3 rounded-2xl transition text-xs border border-slate-200">ساخت حساب کاربری جدید</button>
         </div>
         <p id="login-msg" class="text-xs text-center mt-4 text-rose-500 hidden"></p>
       </div>
 
+      <!-- ثبت‌نام -->
       <div id="signup-card" class="w-full bg-white rounded-3xl p-7 border border-slate-100 shadow-xl hidden">
         <div class="text-center mb-6">
           <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 mb-3 text-2xl">📝</div>
@@ -95,23 +74,25 @@
             <label class="block text-xs font-semibold text-slate-600 mb-1">رمز عبور (حداقل ۶ کاراکتر)</label>
             <input id="signup-password" type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition">
           </div>
-          <button onclick="registerUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm mt-2">ثبت‌نام در سامانه</button>
-          <button onclick="showLoginScreen()" class="w-full text-slate-500 hover:text-slate-700 py-2.5 text-xs font-medium">قبلاً حساب داشته‌اید؟ بازگشت به ورود</button>
+          <button type="button" onclick="registerUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm mt-2">ثبت‌نام در سامانه</button>
+          <button type="button" onclick="showLoginScreen()" class="w-full text-slate-500 hover:text-slate-700 py-2.5 text-xs font-medium">قبلاً حساب داشته‌اید؟ بازگشت به ورود</button>
         </div>
         <p id="signup-msg" class="text-xs text-center mt-4 hidden"></p>
       </div>
 
+      <!-- تایید ایمیل -->
       <div id="confirm-email-card" class="w-full bg-white rounded-3xl p-7 border border-slate-100 shadow-xl text-center hidden">
         <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">📬</div>
         <h2 class="text-lg font-black text-slate-800 mb-2">ایمیل فعال‌سازی ارسال شد!</h2>
         <p class="text-xs text-slate-600 leading-relaxed mb-6">یک لینک تأیید به ایمیل شما ارسال شد. لطفاً آن را تأیید کرده و سپس وارد شوید.</p>
-        <button onclick="showLoginScreen()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl transition text-xs">بازگشت به صفحه ورود</button>
+        <button type="button" onclick="showLoginScreen()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl transition text-xs">بازگشت به صفحه ورود</button>
       </div>
     </div>
 
     <!-- ================= بخش ۲: بدنه اصلی اپلیکیشن ================= -->
     <div id="app-container" class="flex-1 flex flex-col hidden bg-white">
       
+      <!-- هدر به سبک مینیمال Nutrition OS -->
       <header class="px-5 pt-4 pb-3 flex items-center justify-between border-b border-slate-50 bg-white sticky top-0 z-30">
         <div class="flex items-center gap-3">
           <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-sm shadow-md shadow-emerald-600/20">
@@ -125,11 +106,12 @@
             <p id="current-shamsi-badge" class="text-[11px] text-emerald-700/80 font-semibold mt-0.5"></p>
           </div>
         </div>
-        <button onclick="logout()" class="w-9 h-9 rounded-2xl bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-100 flex items-center justify-center transition" title="خروج از حساب">
+        <button type="button" onclick="logout()" class="w-9 h-9 rounded-2xl bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-100 flex items-center justify-center transition" title="خروج از حساب">
           <svg class="w-4 h-4 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         </button>
       </header>
 
+      <!-- هشدار سررسید ۴۸ ساعته -->
       <div id="reminder-box" class="px-5 mt-3 hidden">
         <div class="bg-amber-50 border-r-4 border-amber-500 p-3.5 rounded-2xl shadow-sm">
           <div class="flex items-center gap-1.5 text-amber-900 font-bold text-xs">
@@ -144,12 +126,13 @@
 
         <!-- ================= تب ۱: داشبورد ================= -->
         <section id="view-dashboard" class="space-y-5">
+          <!-- کارت موجودی کل -->
           <div class="bg-[#123e37] text-white p-5 rounded-3xl shadow-lg relative overflow-hidden">
             <div class="flex justify-between items-center text-emerald-200/80 mb-3">
               <span class="text-xs font-medium">موجودی کل</span>
               <div class="flex items-center gap-2">
                 <button type="button" onclick="toggleBalanceVisibility()" id="balance-eye-btn" class="text-emerald-300/80 hover:text-white transition text-sm p-1" title="مخفی‌سازی/نمایش موجودی">👁️</button>
-                <button class="text-emerald-300/80 hover:text-white transition text-sm">📊</button>
+                <button type="button" class="text-emerald-300/80 hover:text-white transition text-sm">📊</button>
               </div>
             </div>
             <div class="flex items-baseline gap-1.5">
@@ -158,6 +141,7 @@
             </div>
           </div>
 
+          <!-- دو کارت هزینه و درآمد ماه جاری -->
           <div class="grid grid-cols-2 gap-3">
             <div class="bg-rose-50/60 border border-rose-100/80 p-4 rounded-3xl flex flex-col justify-between">
               <div class="flex items-center justify-between text-[11px] text-rose-500 font-semibold mb-2">
@@ -182,17 +166,19 @@
             </div>
           </div>
 
+          <!-- اقساط و چک‌های سررسید ماه جاری (دقیقاً زیر دو کارت هزینه و درآمد) -->
           <div class="bg-white rounded-3xl border border-amber-100 p-5 shadow-sm">
             <div class="flex items-center justify-between mb-3 border-b border-slate-50 pb-2.5">
               <div class="flex items-center gap-1.5">
                 <span class="text-base">🗓️</span>
                 <h3 class="font-bold text-slate-800 text-xs">اقساط و چک‌های سررسید این ماه (<span id="dash-month-name" class="text-amber-600"></span>)</h3>
               </div>
-              <button onclick="switchTab('obligations')" class="text-xs text-amber-600 font-bold">+ ثبت جدید</button>
+              <button type="button" onclick="switchTab('obligations')" class="text-xs text-amber-600 font-bold">+ ثبت جدید</button>
             </div>
             <div id="dash-monthly-obligations" class="space-y-2.5"></div>
           </div>
 
+          <!-- بخش حساب‌های منتخب -->
           <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
             <div class="flex items-center justify-between mb-3 border-b border-slate-50 pb-2.5">
               <div class="flex items-center gap-1.5">
@@ -200,13 +186,14 @@
                 <h3 class="font-bold text-slate-800 text-xs">حساب‌های منتخب</h3>
               </div>
               <div class="flex items-center gap-2">
-                <button onclick="openCustomFavoriteAccountsModal()" class="text-[11px] text-emerald-600 hover:text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-lg">⚙️ انتخاب حساب‌ها</button>
-                <button onclick="switchTab('accounts')" class="text-xs text-slate-400 hover:text-slate-600 font-medium">همه ←</button>
+                <button type="button" onclick="openCustomFavoriteAccountsModal()" class="text-[11px] text-emerald-600 hover:text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-lg">⚙️ انتخاب حساب‌ها</button>
+                <button type="button" onclick="switchTab('accounts')" class="text-xs text-slate-400 hover:text-slate-600 font-medium">همه ←</button>
               </div>
             </div>
             <div id="favorite-accounts-list" class="space-y-2.5"></div>
           </div>
 
+          <!-- نمودارهای دایره‌ای هزینه‌ها و درآمدها -->
           <div class="grid grid-cols-1 gap-4">
             <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
               <h4 class="font-bold text-slate-800 text-xs mb-4">توزیع هزینه‌ها</h4>
@@ -231,10 +218,11 @@
             </div>
           </div>
 
+          <!-- تراکنش‌های اخیر داشبورد -->
           <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
             <div class="flex items-center justify-between mb-3 border-b border-slate-50 pb-2.5">
               <h3 class="font-bold text-slate-800 text-xs">تراکنش‌های اخیر</h3>
-              <button onclick="switchTab('all-transactions')" class="text-xs text-emerald-600 font-medium">مشاهده همه ←</button>
+              <button type="button" onclick="switchTab('all-transactions')" class="text-xs text-emerald-600 font-medium">مشاهده همه ←</button>
             </div>
             <div id="dash-recent-tx-list" class="space-y-2.5"></div>
           </div>
@@ -244,7 +232,7 @@
         <section id="view-accounts" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">حساب‌ها</h2>
-            <button onclick="openModal('modal-account')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-lg transition">+</button>
+            <button type="button" onclick="openModal('modal-account')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-lg transition">+</button>
           </div>
           <div id="full-accounts-list" class="space-y-2.5"></div>
         </section>
@@ -253,7 +241,7 @@
         <section id="view-income" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">درآمد</h2>
-            <button onclick="openModal('modal-add-income')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-2xl transition shadow-md shadow-emerald-600/20 flex items-center gap-1">
+            <button type="button" onclick="openModal('modal-add-income')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-2xl transition shadow-md shadow-emerald-600/20 flex items-center gap-1">
               <span>+</span>
               <span>ثبت درآمد جدید</span>
             </button>
@@ -275,7 +263,7 @@
         <section id="view-expense" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">هزینه</h2>
-            <button onclick="openModal('modal-add-expense')" class="bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-4 py-2.5 rounded-2xl transition shadow-md shadow-rose-500/20 flex items-center gap-1">
+            <button type="button" onclick="openModal('modal-add-expense')" class="bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-4 py-2.5 rounded-2xl transition shadow-md shadow-rose-500/20 flex items-center gap-1">
               <span>+</span>
               <span>ثبت هزینه جدید</span>
             </button>
@@ -335,7 +323,7 @@
               <input id="trans-desc" type="text" placeholder="انتقال به حساب پس‌انداز" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
 
-            <button onclick="submitTransfer()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm">انتقال</button>
+            <button type="button" onclick="submitTransfer()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm">انتقال</button>
           </div>
         </section>
 
@@ -343,12 +331,12 @@
         <section id="view-obligations" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">اقساط و چک‌ها</h2>
-            <button onclick="openModal('modal-add-obligation')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-lg transition">+</button>
+            <button type="button" onclick="openModal('modal-add-obligation')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-lg transition">+</button>
           </div>
 
           <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold">
-            <button id="btn-ob-tab-loans" onclick="switchObligationInnerTab('loan')" class="flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold transition shadow-sm">اقساط</button>
-            <button id="btn-ob-tab-checks" onclick="switchObligationInnerTab('check')" class="flex-1 py-2 rounded-xl text-slate-600 transition">چک‌ها</button>
+            <button type="button" id="btn-ob-tab-loans" onclick="switchObligationInnerTab('loan')" class="flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold transition shadow-sm">اقساط</button>
+            <button type="button" id="btn-ob-tab-checks" onclick="switchObligationInnerTab('check')" class="flex-1 py-2 rounded-xl text-slate-600 transition">چک‌ها</button>
           </div>
 
           <div id="obligations-tab-list" class="space-y-2.5"></div>
@@ -403,7 +391,7 @@
         <section id="view-all-transactions" class="space-y-4 hidden">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-black text-slate-800">همه تراکنش‌ها</h2>
-            <button onclick="resetAllTxFilters()" class="text-xs text-rose-500 font-medium">بازنشانی</button>
+            <button type="button" onclick="resetAllTxFilters()" class="text-xs text-rose-500 font-medium">بازنشانی</button>
           </div>
 
           <div class="relative">
@@ -412,10 +400,10 @@
           </div>
 
           <div class="flex gap-2 overflow-x-auto pb-1 text-xs">
-            <button id="chip-filter-all" onclick="setTxTypeFilter('all')" class="px-3.5 py-1.5 rounded-full bg-emerald-600 text-white font-bold whitespace-nowrap shadow-sm">همه</button>
-            <button id="chip-filter-income" onclick="setTxTypeFilter('income')" class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap">درآمد</button>
-            <button id="chip-filter-expense" onclick="setTxTypeFilter('expense')" class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap">هزینه</button>
-            <button id="chip-filter-transfer" onclick="setTxTypeFilter('transfer')" class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap">انتقال</button>
+            <button type="button" id="chip-filter-all" onclick="setTxTypeFilter('all')" class="px-3.5 py-1.5 rounded-full bg-emerald-600 text-white font-bold whitespace-nowrap shadow-sm">همه</button>
+            <button type="button" id="chip-filter-income" onclick="setTxTypeFilter('income')" class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap">درآمد</button>
+            <button type="button" id="chip-filter-expense" onclick="setTxTypeFilter('expense')" class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap">هزینه</button>
+            <button type="button" id="chip-filter-transfer" onclick="setTxTypeFilter('transfer')" class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap">انتقال</button>
           </div>
 
           <div class="grid grid-cols-2 gap-2 text-[11px]">
@@ -440,42 +428,42 @@
 
       <!-- نوار ناوبری پایین صفحه -->
       <nav class="fixed bottom-0 max-w-md w-full bg-white/95 backdrop-blur-md border-t border-slate-100 py-2.5 px-4 flex items-center justify-between text-[10px] text-slate-400 z-40">
-        <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="flex flex-col items-center gap-1 bottom-nav-active">
+        <button type="button" onclick="switchTab('dashboard')" id="bnav-dashboard" class="flex flex-col items-center gap-1 bottom-nav-active">
           <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
           <span>داشبورد</span>
         </button>
 
-        <button onclick="switchTab('accounts')" id="bnav-accounts" class="flex flex-col items-center gap-1">
+        <button type="button" onclick="switchTab('accounts')" id="bnav-accounts" class="flex flex-col items-center gap-1">
           <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
           <span>حساب‌ها</span>
         </button>
 
-        <button onclick="switchTab('expense')" id="bnav-expense" class="flex flex-col items-center gap-1">
+        <button type="button" onclick="switchTab('expense')" id="bnav-expense" class="flex flex-col items-center gap-1">
           <div class="w-7 h-7 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-rose-500/20">−</div>
           <span>هزینه</span>
         </button>
 
-        <button onclick="switchTab('income')" id="bnav-income" class="flex flex-col items-center gap-1">
+        <button type="button" onclick="switchTab('income')" id="bnav-income" class="flex flex-col items-center gap-1">
           <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-emerald-600/20">+</div>
           <span>درآمد</span>
         </button>
 
-        <button onclick="switchTab('transfer')" id="bnav-transfer" class="flex flex-col items-center gap-1">
+        <button type="button" onclick="switchTab('transfer')" id="bnav-transfer" class="flex flex-col items-center gap-1">
           <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"></path></svg>
           <span>انتقال</span>
         </button>
 
-        <button onclick="switchTab('obligations')" id="bnav-obligations" class="flex flex-col items-center gap-1">
+        <button type="button" onclick="switchTab('obligations')" id="bnav-obligations" class="flex flex-col items-center gap-1">
           <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
           <span>اقساط</span>
         </button>
 
-        <button onclick="switchTab('reports')" id="bnav-reports" class="flex flex-col items-center gap-1">
+        <button type="button" onclick="switchTab('reports')" id="bnav-reports" class="flex flex-col items-center gap-1">
           <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
           <span>گزارش</span>
         </button>
 
-        <button onclick="switchTab('all-transactions')" id="bnav-all-transactions" class="flex flex-col items-center gap-1">
+        <button type="button" onclick="switchTab('all-transactions')" id="bnav-all-transactions" class="flex flex-col items-center gap-1">
           <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
           <span>همه</span>
         </button>
@@ -485,12 +473,358 @@
 
   </div>
 
-  <!-- ================= بخش کدهای اسکریپت ================= -->
+  <!-- ================= مودال‌ها ================= -->
+
+  <!-- مودال: انتخاب حساب‌های منتخب -->
+  <div id="modal-favorite-accounts" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3.5 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5 text-emerald-600">
+        <span>⭐</span><span>انتخاب حساب‌های منتخب (حداکثر ۴ حساب)</span>
+      </h3>
+      <p class="text-[11px] text-slate-400">حساب‌هایی که تمایل دارید در صفحه داشبورد نمایش داده شوند را علامت بزنید:</p>
+      <div id="favorite-selection-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="closeModal('modal-favorite-accounts')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button type="button" onclick="saveFavoriteAccountsSelection()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ذخیره انتخاب‌ها</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ثبت درآمد -->
+  <div id="modal-add-income" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3.5 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5 text-emerald-600">
+        <span>+</span><span>ثبت درآمد جدید</span>
+      </h3>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">مبلغ دریافتی (تومان)</label>
+        <input id="inc-amount" type="number" placeholder="مثلاً: 12500000" oninput="updateLiveReadableAmount('inc-amount', 'inc-amount-badge')" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-bold text-slate-800">
+        <div id="inc-amount-badge" class="text-[11px] text-emerald-600 font-bold mt-1 hidden bg-emerald-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">بخش درآمد</label>
+          <select id="inc-main-cat" onchange="loadSubCats('income')" class="w-full px-2.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">زیربخش</label>
+          <select id="inc-sub-cat" class="w-full px-2.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        </div>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">واریز به حساب:</label>
+        <select id="inc-account" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-bold"></select>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">توضیحات (اختیاری)</label>
+        <input id="inc-desc" type="text" placeholder="شرح درآمد..." class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modal-add-income')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button type="button" onclick="submitIncome()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ثبت درآمد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ثبت هزینه -->
+  <div id="modal-add-expense" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3.5 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5 text-rose-500">
+        <span>−</span><span>ثبت هزینه جدید</span>
+      </h3>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">مبلغ پرداختی (تومان)</label>
+        <input id="exp-amount" type="number" placeholder="مثلاً: 250000" oninput="updateLiveReadableAmount('exp-amount', 'exp-amount-badge')" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-bold text-rose-600">
+        <div id="exp-amount-badge" class="text-[11px] text-rose-600 font-bold mt-1 hidden bg-rose-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">بخش هزینه</label>
+          <select id="exp-main-cat" onchange="loadSubCats('expense')" class="w-full px-2.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">زیربخش</label>
+          <select id="exp-sub-cat" class="w-full px-2.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        </div>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">کسر از حساب:</label>
+        <select id="exp-account" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-bold"></select>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">توضیحات (اختیاری)</label>
+        <input id="exp-desc" type="text" placeholder="بابت چه چیزی..." class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modal-add-expense')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button type="button" onclick="submitExpense()" class="px-4 py-2 rounded-xl bg-rose-500 text-white font-bold shadow-md shadow-rose-500/20">ثبت هزینه</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: تعریف حساب بانکی -->
+  <div id="modal-account" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3.5 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>💳</span><span>تعریف حساب بانکی جدید</span>
+      </h3>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">انتخاب بانک یا کیف پول</label>
+        <select id="new-acc-bank-select" onchange="handleAccountBankChange()" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        <input id="new-acc-custom-bank" type="text" placeholder="نام بانک خود را بنویسید..." class="w-full mt-2 px-3 py-2 rounded-2xl border border-emerald-300 hidden bg-emerald-50/40">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">پسوند نام حساب یا ۴ رقم کارت (اختیاری)</label>
+        <input id="new-acc-suffix" type="text" placeholder="مثلاً: کارت اصلی، پس‌انداز" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">موجودی اولیه (تومان)</label>
+        <input id="new-acc-balance" type="number" placeholder="مثلاً: 2500000" oninput="updateLiveReadableAmount('new-acc-balance', 'acc-balance-badge')" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        <div id="acc-balance-badge" class="text-[11px] text-emerald-700 font-bold mt-1 hidden bg-emerald-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modal-account')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button type="button" onclick="saveAccount()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ذخیره حساب</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ثبت قسط یا چک -->
+  <div id="modal-add-obligation" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>✍️</span><span>ثبت قسط یا چک جدید</span>
+      </h3>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">طرف حساب / بانک / لندتک</label>
+        <select id="ob-provider-select" onchange="handleObligationProviderChange()" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        <input id="ob-custom-provider-input" type="text" placeholder="نام موسسه را بنویسید..." class="w-full mt-1.5 px-3 py-2 rounded-2xl border border-amber-300 hidden bg-amber-50/40">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">عنوان و شرح</label>
+        <input id="ob-new-title" type="text" placeholder="مثلاً: قسط وام مسکن" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">نوع</label>
+          <select id="ob-new-type" class="w-full px-2 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium">
+            <option value="loan">🏦 قسط وام</option>
+            <option value="check">📜 چک</option>
+            <option value="debt">🤝 قرض و بدهی</option>
+          </select>
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">مبلغ (تومان)</label>
+          <input id="ob-new-amount" type="number" placeholder="۰" oninput="updateLiveReadableAmount('ob-new-amount', 'ob-amount-badge')" class="w-full px-2 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        </div>
+      </div>
+      <div id="ob-amount-badge" class="text-[11px] text-amber-700 font-bold hidden bg-amber-50 py-1 px-2 rounded-lg"></div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">تاریخ سررسید (شمسی)</label>
+        <div class="grid grid-cols-3 gap-1.5">
+          <input id="ob-shamsi-year" type="number" value="1405" class="px-2 py-2 rounded-xl border text-center font-bold">
+          <select id="ob-shamsi-month" class="px-1 py-2 rounded-xl border text-center font-bold bg-white"></select>
+          <input id="ob-shamsi-day" type="number" min="1" max="31" value="1" class="px-2 py-2 rounded-xl border text-center font-bold">
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modal-add-obligation')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button type="button" onclick="submitObligation()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ثبت موعد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ویرایش حساب بانکی -->
+  <div id="modal-edit-account" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3.5 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>✏️</span><span>ویرایش حساب بانکی</span>
+      </h3>
+      <input type="hidden" id="edit-acc-id">
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">نام حساب</label>
+        <input id="edit-acc-name" type="text" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">موجودی (تومان)</label>
+        <input id="edit-acc-balance" type="number" oninput="updateLiveReadableAmount('edit-acc-balance', 'edit-acc-balance-badge')" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        <div id="edit-acc-balance-badge" class="text-[11px] text-emerald-700 font-bold mt-1 hidden bg-emerald-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modal-edit-account')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button type="button" onclick="updateAccountSubmit()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">به‌روزرسانی</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ویرایش تراکنش -->
+  <div id="modal-edit-tx" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>✏️</span><span>ویرایش تراکنش</span>
+      </h3>
+      <input type="hidden" id="edit-tx-id">
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">مبلغ (تومان)</label>
+        <input id="edit-tx-amount" type="number" oninput="updateLiveReadableAmount('edit-tx-amount', 'edit-tx-amount-badge')" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        <div id="edit-tx-amount-badge" class="text-[11px] text-emerald-700 font-bold mt-1 hidden bg-emerald-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">دسته‌بندی</label>
+        <input id="edit-tx-cat" type="text" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">تاریخ تراکنش (شمسی)</label>
+        <div class="grid grid-cols-3 gap-1.5">
+          <input id="edit-tx-year" type="number" class="px-2 py-2 border rounded-xl text-center font-bold">
+          <select id="edit-tx-month" class="px-1 py-2 border rounded-xl text-center font-bold bg-white"></select>
+          <input id="edit-tx-day" type="number" min="1" max="31" class="px-2 py-2 border rounded-xl text-center font-bold">
+        </div>
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">توضیحات</label>
+        <input id="edit-tx-desc" type="text" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modal-edit-tx')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button type="button" onclick="updateTxSubmit()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ذخیره</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ویرایش چک یا قسط -->
+  <div id="modal-edit-ob" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>✏️</span><span>ویرایش چک یا قسط</span>
+      </h3>
+      <input type="hidden" id="edit-ob-id">
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">عنوان</label>
+        <input id="edit-ob-title" type="text" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">مبلغ (تومان)</label>
+        <input id="edit-ob-amount" type="number" oninput="updateLiveReadableAmount('edit-ob-amount', 'edit-ob-amount-badge')" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        <div id="edit-ob-amount-badge" class="text-[11px] text-amber-700 font-bold mt-1 hidden bg-amber-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">تاریخ سررسید (شمسی)</label>
+        <div class="grid grid-cols-3 gap-1.5">
+          <input id="edit-ob-year" type="number" class="px-2 py-2 border rounded-xl text-center font-bold">
+          <select id="edit-ob-month" class="px-1 py-2 border rounded-xl text-center font-bold bg-white"></select>
+          <input id="edit-ob-day" type="number" min="1" max="31" class="px-2 py-2 border rounded-xl text-center font-bold">
+        </div>
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">وضعیت</label>
+        <select id="edit-ob-status" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-bold">
+          <option value="pending">در انتظار پرداخت</option>
+          <option value="paid">پرداخت شده</option>
+        </select>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modal-edit-ob')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button type="button" onclick="updateObSubmit()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ذخیره</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= بخش اسکریپت با پایداری تضمین‌شده ================= -->
   <script>
+    // الگوریتم توکار تقویم جلالی برای رفع هرگونه وابستگی به CDN
+    const jalaali = {
+      toJalaali: function(gy, gm, gd) {
+        if (Object.prototype.toString.call(gy) === '[object Date]') {
+          gd = gy.getDate();
+          gm = gy.getMonth() + 1;
+          gy = gy.getFullYear();
+        }
+        return this.d2j(this.g2d(gy, gm, gd));
+      },
+      toGregorian: function(jy, jm, jd) {
+        return this.d2g(this.j2d(jy, jm, jd));
+      },
+      jalaaliMonthLength: function(jy, jm) {
+        if (jm <= 6) return 31;
+        if (jm <= 11) return 30;
+        return this.isLeapJalaaliYear(jy) ? 30 : 29;
+      },
+      isLeapJalaaliYear: function(jy) {
+        return this.jalCal(jy).leap === 0;
+      },
+      jalCal: function(jy) {
+        const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2099, 2192, 2262, 2324, 2394, 2456, 3178];
+        const bl = breaks.length;
+        const gy = jy + 621;
+        let leapJ = -14, jp = breaks[0], jm, jump, leap, n, i;
+        for (i = 1; i < bl; i += 1) {
+          jm = breaks[i];
+          jump = jm - jp;
+          if (jy < jm) break;
+          leapJ = leapJ + Math.floor(jump / 33) * 8 + Math.floor((jump % 33) / 4);
+          jp = jm;
+        }
+        n = jy - jp;
+        leapJ = leapJ + Math.floor(n / 33) * 8 + Math.floor(((n % 33) + 3) / 4);
+        if ((jump % 33) === 4 && jump - n === 4) leapJ += 1;
+        const leapG = Math.floor(gy / 4) - Math.floor(((Math.floor(gy / 100) + 1) * 3) / 4) - 150;
+        const march = 20 + leapJ - leapG;
+        if (jump - n < 6) n = n - jump + Math.floor((jump + 4) / 33) * 33 + 1;
+        leap = ((((n + 1) % 33) - 1) % 4);
+        if (leap === -1) leap = 4;
+        return { leap: leap, gy: gy, march: march };
+      },
+      j2d: function(jy, jm, jd) {
+        const r = this.jalCal(jy);
+        return this.g2d(r.gy, 3, r.march) + (jm - 1) * 31 - Math.floor(jm / 7) * (jm - 7) + jd - 1;
+      },
+      d2j: function(jdn) {
+        const gy = this.d2g(jdn).gy;
+        let jy = gy - 621;
+        const r = this.jalCal(jy);
+        const jdn1f = this.g2d(r.gy, 3, r.march);
+        let k = jdn - jdn1f;
+        if (k >= 0) {
+          if (k <= 185) return { jy: jy, jm: 1 + Math.floor(k / 31), jd: (k % 31) + 1 };
+          k -= 186;
+          return { jy: jy, jm: 7 + Math.floor(k / 30), jd: (k % 30) + 1 };
+        }
+        jy -= 1;
+        k += 179;
+        if (r.leap === 1) k += 1;
+        return { jy: jy, jm: 7 + Math.floor(k / 30), jd: (k % 30) + 1 };
+      },
+      g2d: function(gy, gm, gd) {
+        let d = Math.floor((gy + Math.floor((gm - 8) / 6) + 100100) * 1461 / 4)
+            + Math.floor((153 * ((gm + 9) % 12) + 2) / 5) + gd - 34840408;
+        d = d - Math.floor(Math.floor((gy + 100100 + Math.floor((gm - 8) / 6)) / 100) * 3 / 4) + 752;
+        return d;
+      },
+      d2g: function(jdn) {
+        let j = 4 * jdn + 1393616;
+        j = j + Math.floor(Math.floor((4 * jdn + 183187717) / 146097) * 3 / 4) * 4 - 3908;
+        const i = Math.floor((j % 1461) / 4) * 5 + 308;
+        const gd = Math.floor((i % 153) / 5) + 1;
+        const gm = ((Math.floor(i / 153) + 2) % 12) + 1;
+        const gy = Math.floor(j / 1461) - 100100 + Math.floor((8 - gm) / 6);
+        return { gy: gy, gm: gm, gd: gd };
+      }
+    };
+
     const SUPABASE_URL = 'https://hxwnerhpecqdqcvnvuhn.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_KnjuoFJZsAqLyebz98F9HQ_IU7G1EmJ';
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // کلاینت امن سوپابیس با پایداری نشست
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
 
+    let currentUser = null;
     let currentAccounts = [];
     let allObligations = [];
     let allTransactions = [];
@@ -503,58 +837,59 @@
     let currentObInnerTab = 'loan';
     let currentTxTypeChip = 'all';
 
-    // متغیرهای وضعیت مخفی‌سازی و تنظیمات ابری کاربر
     let isBalanceHidden = false;
     let actualTotalBalance = 0;
     let userFavoriteAccountIds = [];
 
-    // ================= مدیریت تنظیمات ابری کاربر در دیتابیس =================
+    // بارگذاری تنظیمات کاربر (با اولویت حافظه محلی و پشتیبانی دیتابیس)
     async function loadUserProfileSettings(userId) {
+      const localHidden = localStorage.getItem('is_balance_hidden_' + userId);
+      if (localHidden !== null) isBalanceHidden = localHidden === 'true';
+
+      const localFavs = localStorage.getItem('fav_accounts_' + userId);
+      if (localFavs) {
+        try { userFavoriteAccountIds = JSON.parse(localFavs); } catch(e){}
+      }
+
       try {
-        const { data, error } = await client
+        const { data } = await client
           .from('user_profiles')
           .select('*')
           .eq('user_id', userId)
           .maybeSingle();
 
-        if (error) throw error;
-
         if (data) {
-          isBalanceHidden = !!data.is_balance_hidden;
-          userFavoriteAccountIds = Array.isArray(data.favorite_accounts) ? data.favorite_accounts : [];
-        } else {
-          // ایجاد رکورد پیش‌فرض در اولین ورود کاربر
-          await client.from('user_profiles').insert({
-            user_id: userId,
-            favorite_accounts: [],
-            is_balance_hidden: false
-          });
+          if (typeof data.is_balance_hidden === 'boolean') {
+            isBalanceHidden = data.is_balance_hidden;
+            localStorage.setItem('is_balance_hidden_' + userId, isBalanceHidden);
+          }
+          if (Array.isArray(data.favorite_accounts)) {
+            userFavoriteAccountIds = data.favorite_accounts;
+            localStorage.setItem('fav_accounts_' + userId, JSON.stringify(userFavoriteAccountIds));
+          }
         }
-      } catch (err) {
-        console.warn('Error fetching user cloud profile:', err.message);
-      }
+      } catch (err) {}
     }
 
     async function saveUserProfileSettings() {
-      try {
-        const { data: { user } } = await client.auth.getUser();
-        if (!user) return;
+      if (!currentUser) return;
+      localStorage.setItem('is_balance_hidden_' + currentUser.id, isBalanceHidden);
+      localStorage.setItem('fav_accounts_' + currentUser.id, JSON.stringify(userFavoriteAccountIds));
 
+      try {
         await client.from('user_profiles').upsert({
-          user_id: user.id,
+          user_id: currentUser.id,
           favorite_accounts: userFavoriteAccountIds,
           is_balance_hidden: isBalanceHidden,
           updated_at: new Date().toISOString()
         });
-      } catch (err) {
-        console.warn('Error saving user cloud profile:', err.message);
-      }
+      } catch (err) {}
     }
 
     async function toggleBalanceVisibility() {
       isBalanceHidden = !isBalanceHidden;
       updateBalanceDisplay();
-      await saveUserProfileSettings(); // ذخیره مستقیم در پایگاه داده
+      await saveUserProfileSettings();
     }
 
     function updateBalanceDisplay() {
@@ -614,7 +949,7 @@
         const { data, error } = await client.auth.signInWithPassword({ email, password });
         if (error) {
           if (error.message.includes('Email not confirmed')) {
-            msg.innerText = 'ایمیل شما هنوز تایید نشده است. لطفاً ایمیل خود را بررسی کنید یا در تنظیمات Supabase تیک Confirm email را بردارید.';
+            msg.innerText = 'ایمیل شما هنوز تایید نشده است. لطفاً ایمیل خود را بررسی کنید یا تیک Confirm email را بردارید.';
           } else if (error.message.includes('Invalid login credentials')) {
             msg.innerText = 'ایمیل یا رمز عبور اشتباه است.';
           } else {
@@ -625,7 +960,8 @@
         }
 
         if (data && data.user) {
-          await enterApp(data.user);
+          currentUser = data.user;
+          await enterApp(currentUser);
         }
       } catch (err) {
         msg.innerText = 'خطای ارتباط با سرور: ' + err.message;
@@ -656,7 +992,8 @@
         }
 
         if (data && data.session) {
-          await enterApp(data.user);
+          currentUser = data.user;
+          await enterApp(currentUser);
         } else {
           document.getElementById('signup-card').classList.add('hidden');
           document.getElementById('confirm-email-card').classList.remove('hidden');
@@ -670,21 +1007,22 @@
 
     async function logout() {
       await client.auth.signOut();
+      currentUser = null;
       document.getElementById('app-container').classList.add('hidden');
       document.getElementById('auth-container').classList.remove('hidden');
       showLoginScreen();
     }
 
     async function enterApp(user) {
+      currentUser = user;
       document.getElementById('auth-container').classList.add('hidden');
       document.getElementById('app-container').classList.remove('hidden');
+      
       const emailName = user.email ? user.email.split('@')[0] : 'کاربر';
       document.getElementById('user-display-name').innerText = emailName;
       document.getElementById('user-avatar-text').innerText = emailName.substring(0, 2).toUpperCase();
       
-      // بارگذاری تنظیمات ذخیره‌شده از سرور
       await loadUserProfileSettings(user.id);
-      
       switchTab('dashboard');
       await refreshAll();
     }
@@ -767,7 +1105,7 @@
         return `
           <div class="${sizeClass} rounded-2xl bg-neutral-900 border border-amber-400 flex items-center justify-center flex-shrink-0 shadow-xs" title="بانک پاسارگاد">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="8" stroke="#fbbf24" stroke-width="2"/>
+              <circle cx="12" cy="12" r="8" stroke="#fbbf24" stroke-width="2.5"/>
               <path d="M8 14l4-5 4 5" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
             </svg>
           </div>
@@ -787,7 +1125,7 @@
 
       if (name.includes('اسنپ') || name.includes('snapp')) {
         return `
-          <div class="${sizeClass} rounded-2xl bg-emerald-500 flex items-center justify-center flex-shrink-0 text-white font-black text-xs" title="اسنپ‌پی">
+          <div class="${sizeClass} rounded-2xl bg-emerald-500 flex items-center justify-center flex-shrink-0 text-white font-black text-xs shadow-xs" title="اسنپ‌پی">
             <span>!P</span>
           </div>
         `;
@@ -795,7 +1133,7 @@
 
       if (name.includes('دیجی') || name.includes('digi')) {
         return `
-          <div class="${sizeClass} rounded-2xl bg-blue-600 flex items-center justify-center flex-shrink-0 text-white font-black text-xs" title="دیجی‌پی">
+          <div class="${sizeClass} rounded-2xl bg-blue-600 flex items-center justify-center flex-shrink-0 text-white font-black text-xs shadow-xs" title="دیجی‌پی">
             <span>DP</span>
           </div>
         `;
@@ -803,14 +1141,14 @@
 
       if (name.includes('نقد') || name.includes('کیف')) {
         return `
-          <div class="${sizeClass} rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0 text-emerald-700 text-lg">
+          <div class="${sizeClass} rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0 text-emerald-700 text-lg shadow-xs">
             💵
           </div>
         `;
       }
 
       return `
-        <div class="${sizeClass} rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-700">
+        <div class="${sizeClass} rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-700 shadow-xs">
           <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
         </div>
       `;
@@ -882,9 +1220,13 @@
       initDateFilterSelects();
 
       try {
-        const { data: { session } } = await client.auth.getSession();
-        if (session && session.user) {
-          await enterApp(session.user);
+        const { data, error } = await client.auth.getSession();
+        if (error) {
+          showLoginScreen();
+          return;
+        }
+        if (data && data.session && data.session.user) {
+          await enterApp(data.session.user);
         } else {
           showLoginScreen();
         }
@@ -893,26 +1235,18 @@
       }
     });
 
-    client.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session && session.user) {
-        if (document.getElementById('app-container').classList.contains('hidden')) {
-          await enterApp(session.user);
-        }
-      } else if (event === 'SIGNED_OUT') {
-        document.getElementById('app-container').classList.add('hidden');
-        document.getElementById('auth-container').classList.remove('hidden');
-        showLoginScreen();
-      }
-    });
-
     function initBankSelects() {
       const bankSelect = document.getElementById('new-acc-bank-select');
-      bankSelect.innerHTML = '';
-      IRANIAN_BANKS.forEach(b => bankSelect.innerHTML += `<option value="${b}">${b}</option>`);
+      if (bankSelect) {
+        bankSelect.innerHTML = '';
+        IRANIAN_BANKS.forEach(b => bankSelect.innerHTML += `<option value="${b}">${b}</option>`);
+      }
 
       const providerSelect = document.getElementById('ob-provider-select');
-      providerSelect.innerHTML = '';
-      OBLIGATION_PROVIDERS.forEach(p => providerSelect.innerHTML += `<option value="${p}">${p}</option>`);
+      if (providerSelect) {
+        providerSelect.innerHTML = '';
+        OBLIGATION_PROVIDERS.forEach(p => providerSelect.innerHTML += `<option value="${p}">${p}</option>`);
+      }
     }
 
     function handleAccountBankChange() {
@@ -941,97 +1275,125 @@
 
     function initShamsiSelectors() {
       const currentSh = getTodayShamsi();
-      document.getElementById('current-shamsi-badge').innerText = `امروز، ${currentSh.jd} ${shamsiMonths[currentSh.jm - 1]} ${currentSh.jy}`;
-      document.getElementById('dash-month-name').innerText = `${shamsiMonths[currentSh.jm - 1]}`;
+      const badge = document.getElementById('current-shamsi-badge');
+      if (badge) badge.innerText = `امروز، ${currentSh.jd} ${shamsiMonths[currentSh.jm - 1]} ${currentSh.jy}`;
+      
+      const dashM = document.getElementById('dash-month-name');
+      if (dashM) dashM.innerText = `${shamsiMonths[currentSh.jm - 1]}`;
 
       const obMonthSel = document.getElementById('ob-shamsi-month');
-      obMonthSel.innerHTML = '';
-      shamsiMonths.forEach((m, idx) => {
-        obMonthSel.innerHTML += `<option value="${idx + 1}" ${idx + 1 === currentSh.jm ? 'selected' : ''}>${m}</option>`;
-      });
-      document.getElementById('ob-shamsi-year').value = currentSh.jy;
-      document.getElementById('ob-shamsi-day').value = currentSh.jd;
+      if (obMonthSel) {
+        obMonthSel.innerHTML = '';
+        shamsiMonths.forEach((m, idx) => {
+          obMonthSel.innerHTML += `<option value="${idx + 1}" ${idx + 1 === currentSh.jm ? 'selected' : ''}>${m}</option>`;
+        });
+        document.getElementById('ob-shamsi-year').value = currentSh.jy;
+        document.getElementById('ob-shamsi-day').value = currentSh.jd;
+      }
 
       const repMonthSel = document.getElementById('report-shamsi-month-select');
-      repMonthSel.innerHTML = '';
-      shamsiMonths.forEach((m, idx) => {
-        repMonthSel.innerHTML += `<option value="${currentSh.jy}-${idx + 1}" ${idx + 1 === currentSh.jm ? 'selected' : ''}>${m} ${currentSh.jy}</option>`;
-      });
+      if (repMonthSel) {
+        repMonthSel.innerHTML = '';
+        shamsiMonths.forEach((m, idx) => {
+          repMonthSel.innerHTML += `<option value="${currentSh.jy}-${idx + 1}" ${idx + 1 === currentSh.jm ? 'selected' : ''}>${m} ${currentSh.jy}</option>`;
+        });
+      }
     }
 
     function initDateFilterSelects() {
       const currentSh = getTodayShamsi();
       const yearSel = document.getElementById('filter-year');
-      yearSel.innerHTML = '<option value="all">همه سال‌ها</option>';
-      for (let y = currentSh.jy - 2; y <= currentSh.jy + 2; y++) {
-        yearSel.innerHTML += `<option value="${y}">${y}</option>`;
+      if (yearSel) {
+        yearSel.innerHTML = '<option value="all">همه سال‌ها</option>';
+        for (let y = currentSh.jy - 2; y <= currentSh.jy + 2; y++) {
+          yearSel.innerHTML += `<option value="${y}">${y}</option>`;
+        }
       }
 
       const monthSel = document.getElementById('filter-month');
-      monthSel.innerHTML = '<option value="all">همه ماه‌ها</option>';
-      shamsiMonths.forEach((m, idx) => {
-        monthSel.innerHTML += `<option value="${idx + 1}">${m}</option>`;
-      });
+      if (monthSel) {
+        monthSel.innerHTML = '<option value="all">همه ماه‌ها</option>';
+        shamsiMonths.forEach((m, idx) => {
+          monthSel.innerHTML += `<option value="${idx + 1}">${m}</option>`;
+        });
+      }
 
       const daySel = document.getElementById('filter-day');
-      daySel.innerHTML = '<option value="all">همه روزها</option>';
-      for (let d = 1; d <= 31; d++) {
-        daySel.innerHTML += `<option value="${d}">${d}</option>`;
+      if (daySel) {
+        daySel.innerHTML = '<option value="all">همه روزها</option>';
+        for (let d = 1; d <= 31; d++) {
+          daySel.innerHTML += `<option value="${d}">${d}</option>`;
+        }
       }
     }
 
     function initCategorySelects() {
       const incMain = document.getElementById('inc-main-cat');
       const expMain = document.getElementById('exp-main-cat');
-      incMain.innerHTML = '';
-      expMain.innerHTML = '';
-      Object.keys(categories.income).forEach(c => incMain.innerHTML += `<option value="${c}">${c}</option>`);
-      Object.keys(categories.expense).forEach(c => expMain.innerHTML += `<option value="${c}">${c}</option>`);
-      loadSubCats('income');
-      loadSubCats('expense');
+      if (incMain) {
+        incMain.innerHTML = '';
+        Object.keys(categories.income).forEach(c => incMain.innerHTML += `<option value="${c}">${c}</option>`);
+        loadSubCats('income');
+      }
+      if (expMain) {
+        expMain.innerHTML = '';
+        Object.keys(categories.expense).forEach(c => expMain.innerHTML += `<option value="${c}">${c}</option>`);
+        loadSubCats('expense');
+      }
     }
 
     function loadSubCats(type) {
-      const mainVal = document.getElementById(type === 'income' ? 'inc-main-cat' : 'exp-main-cat').value;
+      const mainEl = document.getElementById(type === 'income' ? 'inc-main-cat' : 'exp-main-cat');
       const subEl = document.getElementById(type === 'income' ? 'inc-sub-cat' : 'exp-sub-cat');
+      if (!mainEl || !subEl) return;
       subEl.innerHTML = '';
-      (categories[type][mainVal] || []).forEach(s => subEl.innerHTML += `<option value="${s}">${s}</option>`);
+      (categories[type][mainEl.value] || []).forEach(s => subEl.innerHTML += `<option value="${s}">${s}</option>`);
     }
 
     function switchTab(tabName) {
       const tabs = ['dashboard', 'all-transactions', 'accounts', 'income', 'expense', 'transfer', 'obligations', 'reports'];
       tabs.forEach(t => {
-        document.getElementById(`view-${t}`).classList.add('hidden');
+        const view = document.getElementById(`view-${t}`);
+        if (view) view.classList.add('hidden');
         const bnav = document.getElementById(`bnav-${t}`);
         if (bnav) bnav.className = 'flex flex-col items-center gap-1 text-slate-400';
       });
 
-      document.getElementById(`view-${tabName}`).classList.remove('hidden');
+      const activeView = document.getElementById(`view-${tabName}`);
+      if (activeView) activeView.classList.remove('hidden');
       const activeBnav = document.getElementById(`bnav-${tabName}`);
       if (activeBnav) activeBnav.className = 'flex flex-col items-center gap-1 bottom-nav-active';
 
-      if (tabName === 'reports') setTimeout(() => loadShamsiReport(), 50);
-      if (tabName === 'dashboard') setTimeout(() => { renderDashboardCharts(); renderFavoriteAccounts(); }, 50);
+      if (tabName === 'reports') setTimeout(() => loadShamsiReport(), 30);
+      if (tabName === 'dashboard') setTimeout(() => { renderDashboardCharts(); renderFavoriteAccounts(); }, 30);
       if (tabName === 'all-transactions') renderFilteredTransactions();
       if (tabName === 'income') renderIncomeTab();
       if (tabName === 'expense') renderExpenseTab();
       if (tabName === 'obligations') renderObligationsTab();
     }
 
+    // لود مرحله‌ای و ایمن بدون توقف
     async function refreshAll() {
-      try { await fetchAccounts(); } catch(e){}
-      try { await fetchObligations(); } catch(e){}
-      try { await loadDashboardStats(); } catch(e){}
-      try { renderDashboardCharts(); } catch(e){}
-      try { renderFilteredTransactions(); } catch(e){}
-      try { renderIncomeTab(); } catch(e){}
-      try { renderExpenseTab(); } catch(e){}
-      try { renderObligationsTab(); } catch(e){}
+      await fetchAccounts();
+      await fetchObligations();
+      await loadDashboardStats();
+
+      renderDashboardCharts();
+      renderFavoriteAccounts();
+      renderFilteredTransactions();
+      renderIncomeTab();
+      renderExpenseTab();
+      renderObligationsTab();
     }
 
     async function fetchAccounts() {
-      const { data } = await client.from('accounts').select('*').order('created_at', { ascending: true });
-      currentAccounts = data || [];
+      try {
+        const { data, error } = await client.from('accounts').select('*').order('created_at', { ascending: true });
+        if (error) console.error("fetchAccounts error:", error);
+        currentAccounts = data || [];
+      } catch (err) {
+        currentAccounts = [];
+      }
 
       const incSelect = document.getElementById('inc-account');
       const expSelect = document.getElementById('exp-account');
@@ -1040,39 +1402,41 @@
       const filterAcc = document.getElementById('filter-account');
       const fullList = document.getElementById('full-accounts-list');
       
-      incSelect.innerHTML = '';
-      expSelect.innerHTML = '';
-      transFrom.innerHTML = '';
-      transTo.innerHTML = '';
-      filterAcc.innerHTML = '<option value="all">همه حساب‌ها</option>';
-      fullList.innerHTML = '';
+      if (incSelect) incSelect.innerHTML = '';
+      if (expSelect) expSelect.innerHTML = '';
+      if (transFrom) transFrom.innerHTML = '';
+      if (transTo) transTo.innerHTML = '';
+      if (filterAcc) filterAcc.innerHTML = '<option value="all">همه حساب‌ها</option>';
+      if (fullList) fullList.innerHTML = '';
 
       let total = 0;
       currentAccounts.forEach(acc => {
         const bal = parseFloat(acc.balance || 0);
         total += bal;
         const opt = `<option value="${acc.id}">${acc.name} (${Number(bal).toLocaleString('fa-IR')} ت)</option>`;
-        incSelect.innerHTML += opt;
-        expSelect.innerHTML += opt;
-        transFrom.innerHTML += opt;
-        transTo.innerHTML += opt;
-        filterAcc.innerHTML += `<option value="${acc.id}">${acc.name}</option>`;
+        if (incSelect) incSelect.innerHTML += opt;
+        if (expSelect) expSelect.innerHTML += opt;
+        if (transFrom) transFrom.innerHTML += opt;
+        if (transTo) transTo.innerHTML += opt;
+        if (filterAcc) filterAcc.innerHTML += `<option value="${acc.id}">${acc.name}</option>`;
 
-        fullList.innerHTML += `
-          <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between hover:border-slate-200 transition">
-            <div class="flex items-center gap-3">
-              ${getBankLogoHtml(acc.name, "w-11 h-11")}
-              <div>
-                <h4 class="font-bold text-xs text-slate-800">${acc.name}</h4>
-                <p class="text-[10px] text-slate-400 mt-0.5">${Number(bal).toLocaleString('fa-IR')} تومان</p>
+        if (fullList) {
+          fullList.innerHTML += `
+            <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between hover:border-slate-200 transition">
+              <div class="flex items-center gap-3">
+                ${getBankLogoHtml(acc.name, "w-11 h-11")}
+                <div>
+                  <h4 class="font-bold text-xs text-slate-800">${acc.name}</h4>
+                  <p class="text-[10px] text-slate-400 mt-0.5">${Number(bal).toLocaleString('fa-IR')} تومان</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openEditAccountModal('${acc.id}', '${acc.name}', ${bal})" class="text-slate-400 hover:text-emerald-600 text-xs p-1">✏️</button>
+                <button type="button" onclick="deleteAccount('${acc.id}', '${acc.name}')" class="text-slate-400 hover:text-rose-600 text-xs p-1">🗑️</button>
               </div>
             </div>
-            <div class="flex items-center gap-2">
-              <button onclick="openEditAccountModal('${acc.id}', '${acc.name}', ${bal})" class="text-slate-400 hover:text-emerald-600 text-xs p-1">✏️</button>
-              <button onclick="deleteAccount('${acc.id}', '${acc.name}')" class="text-slate-400 hover:text-rose-600 text-xs p-1">🗑️</button>
-            </div>
-          </div>
-        `;
+          `;
+        }
       });
 
       actualTotalBalance = total;
@@ -1090,7 +1454,6 @@
         return;
       }
 
-      // استفاده از شناسه‌های حساب‌های ذخیره شده در پایگاه داده کاربر
       let favIds = userFavoriteAccountIds;
       if (!favIds || favIds.length === 0) {
         favIds = currentAccounts.slice(0, 4).map(a => a.id);
@@ -1122,6 +1485,7 @@
 
     function openCustomFavoriteAccountsModal() {
       const listEl = document.getElementById('favorite-selection-list');
+      if (!listEl) return;
       listEl.innerHTML = '';
       let favIds = userFavoriteAccountIds;
       if (!favIds || favIds.length === 0) {
@@ -1149,11 +1513,8 @@
         return alert('حداکثر می‌توانید ۴ حساب را به عنوان منتخب انتخاب نمایید.');
       }
       userFavoriteAccountIds = Array.from(checkedBoxes).map(cb => cb.value);
-      
       closeModal('modal-favorite-accounts');
       renderFavoriteAccounts();
-      
-      // ذخیره دائمی انتخاب‌ها در دیتابیس ابری
       await saveUserProfileSettings();
     }
 
@@ -1173,48 +1534,54 @@
       const { error } = await client.from('accounts').update({ name, balance }).eq('id', id);
       if (error) return alert(error.message);
       closeModal('modal-edit-account');
-      refreshAll();
+      await refreshAll();
     }
 
     async function deleteAccount(id, name) {
       if (!confirm(`آیا از حذف حساب "${name}" اطمینان دارید؟`)) return;
       const { error } = await client.from('accounts').delete().eq('id', id);
       if (error) return alert(error.message);
-      refreshAll();
+      await refreshAll();
     }
 
     async function fetchObligations() {
-      const { data } = await client.from('obligations').select('*').order('due_date', { ascending: true });
-      allObligations = data || [];
+      try {
+        const { data, error } = await client.from('obligations').select('*').order('due_date', { ascending: true });
+        if (error) console.error("fetchObligations error:", error);
+        allObligations = data || [];
+      } catch (err) {
+        allObligations = [];
+      }
 
       const dashMonthlyBox = document.getElementById('dash-monthly-obligations');
-      dashMonthlyBox.innerHTML = '';
+      if (dashMonthlyBox) {
+        dashMonthlyBox.innerHTML = '';
+        const currentSh = getTodayShamsi();
+        let monthlyCount = 0;
 
-      const currentSh = getTodayShamsi();
-      let monthlyCount = 0;
+        allObligations.forEach(ob => {
+          const obSh = parseIsoToShamsi(ob.due_date);
+          const isPaid = ob.status === 'paid';
 
-      allObligations.forEach(ob => {
-        const obSh = parseIsoToShamsi(ob.due_date);
-        const isPaid = ob.status === 'paid';
-
-        if (obSh.jy === currentSh.jy && obSh.jm === currentSh.jm) {
-          monthlyCount++;
-          dashMonthlyBox.innerHTML += `
-            <div class="border ${isPaid ? 'border-emerald-100 bg-emerald-50/40' : 'border-amber-100 bg-amber-50/40'} p-3.5 rounded-2xl flex items-center justify-between">
-              <div>
-                <span class="text-xs font-bold text-slate-800 block">${ob.title}</span>
-                <span class="text-[10px] text-slate-400 mt-0.5 block">${Number(ob.amount).toLocaleString('fa-IR')} تومان - موعد: ${obSh.jd} ${shamsiMonths[obSh.jm - 1]}</span>
+          if (obSh.jy === currentSh.jy && obSh.jm === currentSh.jm) {
+            monthlyCount++;
+            dashMonthlyBox.innerHTML += `
+              <div class="border ${isPaid ? 'border-emerald-100 bg-emerald-50/40' : 'border-amber-100 bg-amber-50/40'} p-3.5 rounded-2xl flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-bold text-slate-800 block">${ob.title}</span>
+                  <span class="text-[10px] text-slate-400 mt-0.5 block">${Number(ob.amount).toLocaleString('fa-IR')} تومان - موعد: ${obSh.jd} ${shamsiMonths[obSh.jm - 1]}</span>
+                </div>
+                <div>
+                  ${!isPaid ? `<button type="button" onclick="settleObligationPrompt('${ob.id}', ${ob.amount}, '${ob.title}')" class="text-[11px] bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl shadow-xs">پرداخت</button>` : '<span class="text-[11px] font-bold text-emerald-600">پرداخت شد ✓</span>'}
+                </div>
               </div>
-              <div>
-                ${!isPaid ? `<button onclick="settleObligationPrompt('${ob.id}', ${ob.amount}, '${ob.title}')" class="text-[11px] bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl shadow-xs">پرداخت</button>` : '<span class="text-[11px] font-bold text-emerald-600">پرداخت شد ✓</span>'}
-              </div>
-            </div>
-          `;
+            `;
+          }
+        });
+
+        if (monthlyCount === 0) {
+          dashMonthlyBox.innerHTML = '<p class="text-xs text-slate-400 py-2 text-center">چک یا قسطی با سررسید این ماه وجود ندارد. 🎉</p>';
         }
-      });
-
-      if (monthlyCount === 0) {
-        dashMonthlyBox.innerHTML = '<p class="text-xs text-slate-400 py-2 text-center">چک یا قسطی با سررسید این ماه وجود ندارد. 🎉</p>';
       }
 
       checkUrgentReminders();
@@ -1226,11 +1593,11 @@
       const btnLoans = document.getElementById('btn-ob-tab-loans');
       const btnChecks = document.getElementById('btn-ob-tab-checks');
       if (type === 'loan') {
-        btnLoans.className = 'flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold transition shadow-sm';
-        btnChecks.className = 'flex-1 py-2 rounded-xl text-slate-600 transition';
+        if (btnLoans) btnLoans.className = 'flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold transition shadow-sm';
+        if (btnChecks) btnChecks.className = 'flex-1 py-2 rounded-xl text-slate-600 transition';
       } else {
-        btnChecks.className = 'flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold transition shadow-sm';
-        btnLoans.className = 'flex-1 py-2 rounded-xl text-slate-600 transition';
+        if (btnChecks) btnChecks.className = 'flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold transition shadow-sm';
+        if (btnLoans) btnLoans.className = 'flex-1 py-2 rounded-xl text-slate-600 transition';
       }
       renderObligationsTab();
     }
@@ -1264,9 +1631,9 @@
               </div>
             </div>
             <div class="flex items-center gap-2">
-              ${!isPaid ? `<button onclick="settleObligationPrompt('${ob.id}', ${ob.amount}, '${ob.title}')" class="text-xs bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1 rounded-xl font-bold">تسویه</button>` : '<span class="text-[10px] text-emerald-600 font-bold">پرداخت شد</span>'}
-              <button onclick="openEditObligationModal('${ob.id}', '${ob.title}', ${ob.amount}, '${ob.status}', '${ob.due_date}')" class="text-slate-400 hover:text-emerald-600 text-xs">✏️</button>
-              <button onclick="deleteObligation('${ob.id}', '${ob.title}')" class="text-slate-400 hover:text-rose-600 text-xs">🗑️</button>
+              ${!isPaid ? `<button type="button" onclick="settleObligationPrompt('${ob.id}', ${ob.amount}, '${ob.title}')" class="text-xs bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1 rounded-xl font-bold">تسویه</button>` : '<span class="text-[10px] text-emerald-600 font-bold">پرداخت شد</span>'}
+              <button type="button" onclick="openEditObligationModal('${ob.id}', '${ob.title}', ${ob.amount}, '${ob.status}', '${ob.due_date}')" class="text-slate-400 hover:text-emerald-600 text-xs">✏️</button>
+              <button type="button" onclick="deleteObligation('${ob.id}', '${ob.title}')" class="text-slate-400 hover:text-rose-600 text-xs">🗑️</button>
             </div>
           </div>
         `;
@@ -1284,10 +1651,12 @@
       document.getElementById('edit-ob-day').value = obSh.jd;
 
       const mSel = document.getElementById('edit-ob-month');
-      mSel.innerHTML = '';
-      shamsiMonths.forEach((m, idx) => {
-        mSel.innerHTML += `<option value="${idx + 1}" ${idx + 1 === obSh.jm ? 'selected' : ''}>${m}</option>`;
-      });
+      if (mSel) {
+        mSel.innerHTML = '';
+        shamsiMonths.forEach((m, idx) => {
+          mSel.innerHTML += `<option value="${idx + 1}" ${idx + 1 === obSh.jm ? 'selected' : ''}>${m}</option>`;
+        });
+      }
 
       updateLiveReadableAmount('edit-ob-amount', 'edit-ob-amount-badge');
       openModal('modal-edit-ob');
@@ -1308,14 +1677,14 @@
       const { error } = await client.from('obligations').update({ title, amount, status, due_date }).eq('id', id);
       if (error) return alert(error.message);
       closeModal('modal-edit-ob');
-      fetchObligations();
+      await fetchObligations();
     }
 
     async function deleteObligation(id, title) {
       if (!confirm(`آیا از حذف "${title}" اطمینان دارید؟`)) return;
       const { error } = await client.from('obligations').delete().eq('id', id);
       if (error) return alert(error.message);
-      fetchObligations();
+      await fetchObligations();
     }
 
     async function submitObligation() {
@@ -1329,7 +1698,7 @@
       const jy = parseInt(document.getElementById('ob-shamsi-year').value, 10);
       const jm = parseInt(document.getElementById('ob-shamsi-month').value, 10);
       const jd = parseInt(document.getElementById('ob-shamsi-day').value, 10);
-      const user = (await client.auth.getUser()).data.user;
+      const user = currentUser;
 
       if (!title) title = `تعهد ${finalP}`;
       if (!amount || amount <= 0) return alert('مبلغ معتبر وارد کنید.');
@@ -1350,7 +1719,7 @@
       closeModal('modal-add-obligation');
       document.getElementById('ob-new-title').value = '';
       document.getElementById('ob-new-amount').value = '';
-      fetchObligations();
+      await fetchObligations();
     }
 
     async function settleObligationPrompt(obligationId, amount, title) {
@@ -1361,7 +1730,7 @@
       if (isNaN(index) || index < 0 || index >= currentAccounts.length) return;
 
       const selectedAcc = currentAccounts[index];
-      const user = (await client.auth.getUser()).data.user;
+      const user = currentUser;
 
       await client.from('transactions').insert({
         user_id: user.id,
@@ -1376,7 +1745,7 @@
       await client.from('accounts').update({ balance: parseFloat(selectedAcc.balance) - amount }).eq('id', selectedAcc.id);
       await client.from('obligations').update({ status: 'paid' }).eq('id', obligationId);
       alert('مبلغ کسر و وضعیت تعهد پرداخت شد.');
-      refreshAll();
+      await refreshAll();
     }
 
     function checkUrgentReminders() {
@@ -1387,12 +1756,14 @@
 
       const urgentItems = allObligations.filter(ob => {
         if (ob.status === 'paid') return false;
-        const due = ob.due_date.substring(0, 10);
+        const due = ob.due_date ? ob.due_date.substring(0, 10) : '';
         return due >= todayStr && due <= maxStr;
       });
 
       const reminderBox = document.getElementById('reminder-box');
       const reminderUl = document.getElementById('reminder-items');
+      if (!reminderBox || !reminderUl) return;
+
       if (urgentItems.length > 0) {
         reminderUl.innerHTML = '';
         urgentItems.forEach(item => {
@@ -1410,7 +1781,7 @@
       const main = document.getElementById('inc-main-cat').value;
       const sub = document.getElementById('inc-sub-cat').value;
       const desc = document.getElementById('inc-desc').value.trim();
-      const user = (await client.auth.getUser()).data.user;
+      const user = currentUser;
 
       if (!amount || amount <= 0) return alert('مبلغ معتبر وارد کنید.');
       if (!accId) return alert('حساب بانکی را انتخاب کنید.');
@@ -1433,7 +1804,7 @@
 
       closeModal('modal-add-income');
       document.getElementById('inc-amount').value = '';
-      refreshAll();
+      await refreshAll();
       switchTab('income');
     }
 
@@ -1443,7 +1814,7 @@
       const main = document.getElementById('exp-main-cat').value;
       const sub = document.getElementById('exp-sub-cat').value;
       const desc = document.getElementById('exp-desc').value.trim();
-      const user = (await client.auth.getUser()).data.user;
+      const user = currentUser;
 
       if (!amount || amount <= 0) return alert('مبلغ معتبر وارد کنید.');
       if (!accId) return alert('حساب بانکی را انتخاب کنید.');
@@ -1466,12 +1837,13 @@
 
       closeModal('modal-add-expense');
       document.getElementById('exp-amount').value = '';
-      refreshAll();
+      await refreshAll();
       switchTab('expense');
     }
 
     function quickCategoryExpense(catTitle) {
-      document.getElementById('exp-main-cat').value = catTitle;
+      const el = document.getElementById('exp-main-cat');
+      if (el) el.value = catTitle;
       loadSubCats('expense');
       openModal('modal-add-expense');
     }
@@ -1481,7 +1853,7 @@
       const fromAccId = document.getElementById('trans-from-account').value;
       const toAccId = document.getElementById('trans-to-account').value;
       const desc = document.getElementById('trans-desc').value.trim();
-      const user = (await client.auth.getUser()).data.user;
+      const user = currentUser;
 
       if (!amount || amount <= 0) return alert('مبلغ معتبر وارد کنید.');
       if (!fromAccId || !toAccId) return alert('حساب‌های مبدأ و مقصد را انتخاب کنید.');
@@ -1506,17 +1878,23 @@
 
       document.getElementById('trans-amount').value = '';
       alert('انتقال با موفقیت انجام شد.');
-      refreshAll();
+      await refreshAll();
       switchTab('dashboard');
     }
 
+    // لود امن آمار و پر کردن تضمینی تراکنش‌های اخیر
     async function loadDashboardStats() {
-      const { data: txs } = await client.from('transactions').select('*').order('transaction_date', { ascending: false });
-      allTransactions = txs || [];
+      try {
+        const { data, error } = await client.from('transactions').select('*').order('transaction_date', { ascending: false });
+        if (error) console.error("loadDashboardStats error:", error);
+        allTransactions = data || [];
+      } catch (err) {
+        allTransactions = [];
+      }
 
       let totalInc = 0, totalExp = 0;
       allTransactions.forEach(t => {
-        const val = parseFloat(t.amount);
+        const val = parseFloat(t.amount || 0);
         const isTransfer = t.from_account_id && t.to_account_id;
         if (!isTransfer) {
           if (t.from_account_id) totalExp += val;
@@ -1524,8 +1902,10 @@
         }
       });
 
-      document.getElementById('dash-total-income').innerText = Number(totalInc).toLocaleString('fa-IR');
-      document.getElementById('dash-total-expense').innerText = Number(totalExp).toLocaleString('fa-IR');
+      const incEl = document.getElementById('dash-total-income');
+      const expEl = document.getElementById('dash-total-expense');
+      if (incEl) incEl.innerText = Number(totalInc).toLocaleString('fa-IR');
+      if (expEl) expEl.innerText = Number(totalExp).toLocaleString('fa-IR');
 
       const recentList = document.getElementById('dash-recent-tx-list');
       if (recentList) {
@@ -1543,7 +1923,7 @@
     function renderTransactionItemHtml(t) {
       const isTransfer = t.from_account_id && t.to_account_id;
       const isExp = t.from_account_id !== null && !isTransfer;
-      const amt = parseFloat(t.amount);
+      const amt = parseFloat(t.amount || 0);
 
       let logoHtml = '';
       if (isTransfer) {
@@ -1574,8 +1954,8 @@
               <span class="text-[9px] text-slate-400 font-light block">تومان</span>
             </div>
             <div class="flex items-center gap-1">
-              <button onclick="openEditTxModal('${t.id}', ${amt}, '${t.category_name || ''}', '${t.description || ''}', '${t.transaction_date}')" class="text-slate-400 hover:text-emerald-600 text-[10px]">✏️</button>
-              <button onclick="deleteTransaction('${t.id}')" class="text-slate-400 hover:text-rose-600 text-[10px]">🗑️</button>
+              <button type="button" onclick="openEditTxModal('${t.id}', ${amt}, '${t.category_name || ''}', '${t.description || ''}', '${t.transaction_date}')" class="text-slate-400 hover:text-emerald-600 text-[10px]">✏️</button>
+              <button type="button" onclick="deleteTransaction('${t.id}')" class="text-slate-400 hover:text-rose-600 text-[10px]">🗑️</button>
             </div>
           </div>
         </div>
@@ -1589,7 +1969,7 @@
       const incomes = allTransactions.filter(t => t.to_account_id && !t.from_account_id);
       let sum = 0;
       incomes.forEach(t => {
-        sum += parseFloat(t.amount);
+        sum += parseFloat(t.amount || 0);
         list.innerHTML += renderTransactionItemHtml(t);
       });
       const totalEl = document.getElementById('income-view-total');
@@ -1613,7 +1993,7 @@
 
       allTransactions.forEach(t => {
         if (t.from_account_id && t.to_account_id) return;
-        const amt = parseFloat(t.amount);
+        const amt = parseFloat(t.amount || 0);
         const cat = t.category_name ? t.category_name.split('-')[0].trim() : 'سایر';
         if (t.from_account_id) {
           totalExp += amt;
@@ -1629,38 +2009,44 @@
     }
 
     function renderImageStyleDonut(canvasId, emptyId, listId, breakdown, totalAmount, chartInstanceRef) {
+      const canvas = document.getElementById(canvasId);
+      const emptyEl = document.getElementById(emptyId);
+      const listEl = document.getElementById(listId);
+      if (!canvas) return null;
+
+      if (listEl) listEl.innerHTML = '';
+      if (chartInstanceRef) {
+        try { chartInstanceRef.destroy(); } catch(e){}
+      }
+
       const labels = Object.keys(breakdown);
       const values = Object.values(breakdown);
-      const emptyEl = document.getElementById(emptyId);
-      const canvas = document.getElementById(canvasId);
-      const listEl = document.getElementById(listId);
-
-      listEl.innerHTML = '';
-      if (chartInstanceRef) chartInstanceRef.destroy();
 
       if (labels.length === 0 || totalAmount === 0) {
-        emptyEl.classList.remove('hidden');
+        if (emptyEl) emptyEl.classList.remove('hidden');
         canvas.classList.add('hidden');
         return null;
       }
 
-      emptyEl.classList.add('hidden');
+      if (emptyEl) emptyEl.classList.add('hidden');
       canvas.classList.remove('hidden');
 
-      labels.forEach((lbl, idx) => {
-        const val = values[idx];
-        const pct = Math.round((val / totalAmount) * 100);
-        const color = CHART_PALETTE[idx % CHART_PALETTE.length];
-        listEl.innerHTML += `
-          <div class="flex items-center justify-between text-xs py-0.5">
-            <div class="flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: ${color}"></span>
-              <span class="font-medium text-slate-700 truncate max-w-[90px]">${lbl}</span>
+      if (listEl) {
+        labels.forEach((lbl, idx) => {
+          const val = values[idx];
+          const pct = Math.round((val / totalAmount) * 100);
+          const color = CHART_PALETTE[idx % CHART_PALETTE.length];
+          listEl.innerHTML += `
+            <div class="flex items-center justify-between text-xs py-0.5">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: ${color}"></span>
+                <span class="font-medium text-slate-700 truncate max-w-[90px]">${lbl}</span>
+              </div>
+              <span class="font-bold text-slate-700">${pct}%</span>
             </div>
-            <span class="font-bold text-slate-700">${pct}%</span>
-          </div>
-        `;
-      });
+          `;
+        });
+      }
 
       return new Chart(canvas.getContext('2d'), {
         type: 'doughnut',
@@ -1690,26 +2076,39 @@
       currentTxTypeChip = type;
       ['all', 'income', 'expense', 'transfer'].forEach(t => {
         const btn = document.getElementById(`chip-filter-${t}`);
-        if (t === type) {
-          btn.className = 'px-3.5 py-1.5 rounded-full bg-emerald-600 text-white font-bold whitespace-nowrap shadow-sm';
-        } else {
-          btn.className = 'px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap';
+        if (btn) {
+          if (t === type) {
+            btn.className = 'px-3.5 py-1.5 rounded-full bg-emerald-600 text-white font-bold whitespace-nowrap shadow-sm';
+          } else {
+            btn.className = 'px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium whitespace-nowrap';
+          }
         }
       });
       renderFilteredTransactions();
     }
 
     function renderFilteredTransactions() {
-      const sortBy = document.getElementById('filter-sort-by').value;
-      const accountFilter = document.getElementById('filter-account').value;
-      const searchText = document.getElementById('filter-search-text').value.trim().toLowerCase();
-      const yearFilter = document.getElementById('filter-year').value;
-      const monthFilter = document.getElementById('filter-month').value;
-      const dayFilter = document.getElementById('filter-day').value;
+      const sortByEl = document.getElementById('filter-sort-by');
+      const sortBy = sortByEl ? sortByEl.value : 'date-desc';
+
+      const accountFilterEl = document.getElementById('filter-account');
+      const accountFilter = accountFilterEl ? accountFilterEl.value : 'all';
+
+      const searchEl = document.getElementById('filter-search-text');
+      const searchText = searchEl ? searchEl.value.trim().toLowerCase() : '';
+
+      const yearEl = document.getElementById('filter-year');
+      const yearFilter = yearEl ? yearEl.value : 'all';
+
+      const monthEl = document.getElementById('filter-month');
+      const monthFilter = monthEl ? monthEl.value : 'all';
+
+      const dayEl = document.getElementById('filter-day');
+      const dayFilter = dayEl ? dayEl.value : 'all';
 
       let list = [...allTransactions];
 
-      if (accountFilter !== 'all') {
+      if (accountFilter && accountFilter !== 'all') {
         list = list.filter(t => t.from_account_id === accountFilter || t.to_account_id === accountFilter);
       }
 
@@ -1737,10 +2136,11 @@
 
       if (sortBy === 'date-desc') list.sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date));
       else if (sortBy === 'date-asc') list.sort((a, b) => new Date(a.transaction_date) - new Date(b.transaction_date));
-      else if (sortBy === 'amount-desc') list.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
-      else if (sortBy === 'amount-asc') list.sort((a, b) => parseFloat(a.amount) - parseFloat(b.amount));
+      else if (sortBy === 'amount-desc') list.sort((a, b) => parseFloat(b.amount || 0) - parseFloat(a.amount || 0));
+      else if (sortBy === 'amount-asc') list.sort((a, b) => parseFloat(a.amount || 0) - parseFloat(b.amount || 0));
 
       const container = document.getElementById('all-transactions-list');
+      if (!container) return;
       container.innerHTML = '';
       if (list.length === 0) {
         container.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">تراکنشی یافت نشد.</p>';
@@ -1750,12 +2150,18 @@
     }
 
     function resetAllTxFilters() {
-      document.getElementById('filter-sort-by').value = 'date-desc';
-      document.getElementById('filter-account').value = 'all';
-      document.getElementById('filter-search-text').value = '';
-      document.getElementById('filter-year').value = 'all';
-      document.getElementById('filter-month').value = 'all';
-      document.getElementById('filter-day').value = 'all';
+      const sortByEl = document.getElementById('filter-sort-by');
+      if (sortByEl) sortByEl.value = 'date-desc';
+      const accEl = document.getElementById('filter-account');
+      if (accEl) accEl.value = 'all';
+      const searchEl = document.getElementById('filter-search-text');
+      if (searchEl) searchEl.value = '';
+      const yEl = document.getElementById('filter-year');
+      if (yEl) yEl.value = 'all';
+      const mEl = document.getElementById('filter-month');
+      if (mEl) mEl.value = 'all';
+      const dEl = document.getElementById('filter-day');
+      if (dEl) dEl.value = 'all';
       setTxTypeFilter('all');
     }
 
@@ -1770,10 +2176,12 @@
       document.getElementById('edit-tx-day').value = txSh.jd;
 
       const mSel = document.getElementById('edit-tx-month');
-      mSel.innerHTML = '';
-      shamsiMonths.forEach((m, idx) => {
-        mSel.innerHTML += `<option value="${idx + 1}" ${idx + 1 === txSh.jm ? 'selected' : ''}>${m}</option>`;
-      });
+      if (mSel) {
+        mSel.innerHTML = '';
+        shamsiMonths.forEach((m, idx) => {
+          mSel.innerHTML += `<option value="${idx + 1}" ${idx + 1 === txSh.jm ? 'selected' : ''}>${m}</option>`;
+        });
+      }
 
       updateLiveReadableAmount('edit-tx-amount', 'edit-tx-amount-badge');
       openModal('modal-edit-tx');
@@ -1824,14 +2232,14 @@
 
       if (error) return alert(error.message);
       closeModal('modal-edit-tx');
-      refreshAll();
+      await refreshAll();
     }
 
     async function deleteTransaction(id) {
       if (!confirm('آیا از حذف این تراکنش مطمئن هستید؟')) return;
       const { error } = await client.from('transactions').delete().eq('id', id);
       if (error) return alert(error.message);
-      refreshAll();
+      await refreshAll();
     }
 
     async function loadShamsiReport() {
@@ -1844,38 +2252,44 @@
       const startDateStr = shamsiToIsoDate(jy, jm, 1);
       const endDateStr = shamsiToIsoDate(jy, jm, daysInMonth);
 
-      const { data: txs } = await client
-        .from('transactions')
-        .select('*')
-        .gte('transaction_date', `${startDateStr}T00:00:00Z`)
-        .lte('transaction_date', `${endDateStr}T23:59:59Z`);
+      try {
+        const { data: txs } = await client
+          .from('transactions')
+          .select('*')
+          .gte('transaction_date', `${startDateStr}T00:00:00Z`)
+          .lte('transaction_date', `${endDateStr}T23:59:59Z`);
 
-      let mInc = 0, mExp = 0;
-      const expBreakdown = {};
-      const incBreakdown = {};
+        let mInc = 0, mExp = 0;
+        const expBreakdown = {};
+        const incBreakdown = {};
 
-      (txs || []).forEach(t => {
-        if (t.from_account_id && t.to_account_id) return;
-        const val = parseFloat(t.amount);
-        const cat = t.category_name ? t.category_name.split('-')[0].trim() : 'سایر';
-        if (t.from_account_id) {
-          mExp += val;
-          expBreakdown[cat] = (expBreakdown[cat] || 0) + val;
-        } else {
-          mInc += val;
-          incBreakdown[cat] = (incBreakdown[cat] || 0) + val;
+        (txs || []).forEach(t => {
+          if (t.from_account_id && t.to_account_id) return;
+          const val = parseFloat(t.amount || 0);
+          const cat = t.category_name ? t.category_name.split('-')[0].trim() : 'سایر';
+          if (t.from_account_id) {
+            mExp += val;
+            expBreakdown[cat] = (expBreakdown[cat] || 0) + val;
+          } else {
+            mInc += val;
+            incBreakdown[cat] = (incBreakdown[cat] || 0) + val;
+          }
+        });
+
+        const rInc = document.getElementById('rep-income');
+        const rExp = document.getElementById('rep-expense');
+        const rDiff = document.getElementById('rep-diff');
+        if (rInc) rInc.innerText = Number(mInc).toLocaleString('fa-IR');
+        if (rExp) rExp.innerText = Number(mExp).toLocaleString('fa-IR');
+        const diff = mInc - mExp;
+        if (rDiff) {
+          rDiff.innerText = Number(diff).toLocaleString('fa-IR');
+          rDiff.className = `text-xs font-black mt-1 block ${diff >= 0 ? 'text-emerald-700' : 'text-rose-700'}`;
         }
-      });
 
-      document.getElementById('rep-income').innerText = Number(mInc).toLocaleString('fa-IR');
-      document.getElementById('rep-expense').innerText = Number(mExp).toLocaleString('fa-IR');
-      const diff = mInc - mExp;
-      const diffEl = document.getElementById('rep-diff');
-      diffEl.innerText = Number(diff).toLocaleString('fa-IR');
-      diffEl.className = `text-xs font-black mt-1 block ${diff >= 0 ? 'text-emerald-700' : 'text-rose-700'}`;
-
-      repExpChart = renderImageStyleDonut('monthlyExpenseChart', 'rep-exp-chart-empty', 'rep-exp-breakdown-list', expBreakdown, mExp, repExpChart);
-      repIncChart = renderImageStyleDonut('monthlyIncomeChart', 'rep-inc-chart-empty', 'rep-inc-breakdown-list', incBreakdown, mInc, repIncChart);
+        repExpChart = renderImageStyleDonut('monthlyExpenseChart', 'rep-exp-chart-empty', 'rep-exp-breakdown-list', expBreakdown, mExp, repExpChart);
+        repIncChart = renderImageStyleDonut('monthlyIncomeChart', 'rep-inc-chart-empty', 'rep-inc-breakdown-list', incBreakdown, mInc, repIncChart);
+      } catch (err) {}
     }
 
     async function saveAccount() {
@@ -1884,17 +2298,23 @@
       const finalName = bank.includes('سایر') ? (custom || 'حساب من') : bank;
       const suffix = document.getElementById('new-acc-suffix').value.trim();
       const balance = parseFloat(document.getElementById('new-acc-balance').value || 0);
-      const user = (await client.auth.getUser()).data.user;
+      const user = currentUser;
 
       const fullName = suffix ? `${finalName} (${suffix})` : finalName;
       await client.from('accounts').insert({ user_id: user.id, name: fullName, balance });
       closeModal('modal-account');
       document.getElementById('new-acc-suffix').value = '';
-      refreshAll();
+      await refreshAll();
     }
 
-    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+    function openModal(id) { 
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('hidden'); 
+    }
+    function closeModal(id) { 
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden'); 
+    }
   </script>
 </body>
 </html>
