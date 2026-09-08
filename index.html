@@ -96,7 +96,7 @@
         </div>
       </div>
 
-      <!-- تب‌های ناوبری (بخش همه تراکنش‌ها به عنوان آخرین بخش قرار گرفت) -->
+      <!-- تب‌های ناوبری -->
       <nav class="max-w-6xl mx-auto px-4 flex gap-5 overflow-x-auto text-xs font-medium text-slate-500 border-t border-slate-100">
         <button onclick="switchTab('dashboard')" id="tab-dashboard" class="py-3 border-b-2 border-transparent transition tab-active flex items-center gap-1.5 whitespace-nowrap">
           <span>📊</span><span>داشبورد</span>
@@ -163,11 +163,11 @@
           </div>
         </div>
 
-        <!-- چیدمان ردیف میانی داشبورد: حساب‌های پرتکرار در سمت راست، نمودارها در سمت چپ -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <!-- چیدمان ردیف میانی داشبورد: اندازه خانه‌ها کاملاً برابر و عناوین بدون کلمه داشبورد -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
           
-          <!-- ۱. ستون اول سمت راست: لیست عمودی حساب‌های پرتکرار -->
-          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col justify-between">
+          <!-- ۱. ستون اول سمت راست: لیست عمودی حساب‌های پرتکرار (حداکثر ۴ حساب) -->
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm h-full flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-2">
@@ -183,24 +183,24 @@
             </div>
           </div>
 
-          <!-- ۲. نمودار هزینه -->
-          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
+          <!-- ۲. نمودار سهم هزینه‌ها -->
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm h-full flex flex-col items-center justify-between">
             <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-rose-600">
-              <span>🍩</span><span>سهم هزینه‌ها در داشبورد</span>
+              <span>🍩</span><span>سهم هزینه‌ها</span>
             </h4>
-            <div class="w-full max-w-[200px] h-[200px] relative flex items-center justify-center">
+            <div class="w-full max-w-[200px] h-[200px] relative flex items-center justify-center my-auto">
               <canvas id="dashExpenseChart"></canvas>
             </div>
             <div id="dash-exp-empty" class="text-xs text-slate-400 mt-4 hidden">هنوز هزینه‌ای ثبت نشده است.</div>
             <div id="dash-exp-list" class="w-full mt-4 space-y-2 border-t border-slate-100 pt-3"></div>
           </div>
 
-          <!-- ۳. نمودار درآمد -->
-          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
+          <!-- ۳. نمودار سهم درآمدها -->
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm h-full flex flex-col items-center justify-between">
             <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-emerald-600">
-              <span>🍩</span><span>سهم درآمدها در داشبورد</span>
+              <span>🍩</span><span>سهم درآمدها</span>
             </h4>
-            <div class="w-full max-w-[200px] h-[200px] relative flex items-center justify-center">
+            <div class="w-full max-w-[200px] h-[200px] relative flex items-center justify-center my-auto">
               <canvas id="dashIncomeChart"></canvas>
             </div>
             <div id="dash-inc-empty" class="text-xs text-slate-400 mt-4 hidden">هنوز درآمدی ثبت نشده است.</div>
@@ -905,25 +905,21 @@
       });
     }
 
-    // مقداردهی گزینه‌های فیلتر تقویم شمسی در تب همه تراکنش‌ها
     function initDateFilterSelects() {
       const currentSh = getTodayShamsi();
 
-      // سال‌ها (از ۲ سال قبل تا ۳ سال بعد)
       const yearSel = document.getElementById('filter-year');
       yearSel.innerHTML = '<option value="all">همه سال‌ها</option>';
       for (let y = currentSh.jy - 2; y <= currentSh.jy + 3; y++) {
         yearSel.innerHTML += `<option value="${y}">${y}</option>`;
       }
 
-      // ماه‌ها
       const monthSel = document.getElementById('filter-month');
       monthSel.innerHTML = '<option value="all">همه ماه‌ها</option>';
       shamsiMonths.forEach((m, idx) => {
         monthSel.innerHTML += `<option value="${idx + 1}">${m}</option>`;
       });
 
-      // روزها (۱ تا ۳۱)
       const daySel = document.getElementById('filter-day');
       daySel.innerHTML = '<option value="all">همه روزها</option>';
       for (let d = 1; d <= 31; d++) {
@@ -1455,7 +1451,7 @@
       switchTab('dashboard');
     }
 
-    // واکشی اطلاعات داشبورد، اصلاح قطعی نمایش حساب‌های پرتکرار با موجودی دقیق
+    // واکشی اطلاعات داشبورد (حساب‌های پرتکرار حداکثر ۴ حساب)
     async function loadDashboardStats() {
       const { data: txs } = await client.from('transactions').select('*').order('transaction_date', { ascending: false });
       allTransactions = txs || [];
@@ -1463,7 +1459,6 @@
       let totalInc = 0, totalExp = 0;
       const accUsage = {};
 
-      // مقداردهی اولیه برای تمام حساب‌ها تا شمارش حتی برای بدون تراکنش‌ها صفر باشد
       currentAccounts.forEach(acc => {
         accUsage[acc.id] = 0;
       });
@@ -1484,12 +1479,12 @@
       document.getElementById('dash-total-income').innerText = `${Number(totalInc).toLocaleString('fa-IR')} تومان`;
       document.getElementById('dash-total-expense').innerText = `${Number(totalExp).toLocaleString('fa-IR')} تومان`;
 
-      // مرتب‌سازی حساب‌ها بر اساس بیشترین تراکنش با موجودی کاملاً دقیق و آپدیت
+      // محدود به حداکثر ۴ حساب برتر
       const sortedAccs = [...currentAccounts].sort((a, b) => {
         const countA = accUsage[a.id] || 0;
         const countB = accUsage[b.id] || 0;
         return countB - countA;
-      }).slice(0, 5);
+      }).slice(0, 4);
 
       const freqContainer = document.getElementById('frequent-accounts-list');
       freqContainer.innerHTML = '';
@@ -1559,26 +1554,23 @@
       });
     }
 
-    // ۴. بخش جامع "همه تراکنش‌ها" با فیلتر روز، ماه، سال و بانک
+    // ۴. بخش جامع "همه تراکنش‌ها"
     function renderFilteredTransactions() {
       const sortBy = document.getElementById('filter-sort-by').value;
       const accountFilter = document.getElementById('filter-account').value;
       const typeFilter = document.getElementById('filter-type').value;
       const searchText = document.getElementById('filter-search-text').value.trim().toLowerCase();
 
-      // فیلترهای سال، ماه و روز شمسی
       const yearFilter = document.getElementById('filter-year').value;
       const monthFilter = document.getElementById('filter-month').value;
       const dayFilter = document.getElementById('filter-day').value;
 
       let list = [...allTransactions];
 
-      // فیلتر حساب بانکی
       if (accountFilter !== 'all') {
         list = list.filter(t => t.from_account_id === accountFilter || t.to_account_id === accountFilter);
       }
 
-      // فیلتر نوع تراکنش
       if (typeFilter === 'expense') {
         list = list.filter(t => t.from_account_id !== null && t.to_account_id === null);
       } else if (typeFilter === 'income') {
@@ -1587,7 +1579,6 @@
         list = list.filter(t => t.from_account_id !== null && t.to_account_id !== null);
       }
 
-      // فیلتر جستجوی متنی
       if (searchText) {
         list = list.filter(t => {
           const cat = (t.category_name || '').toLowerCase();
@@ -1596,7 +1587,6 @@
         });
       }
 
-      // فیلتر تقویمی شمسی (سال، ماه، روز)
       if (yearFilter !== 'all' || monthFilter !== 'all' || dayFilter !== 'all') {
         list = list.filter(t => {
           const sh = parseIsoToShamsi(t.transaction_date);
@@ -1607,7 +1597,6 @@
         });
       }
 
-      // مرتب‌سازی
       if (sortBy === 'date-desc') {
         list.sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date));
       } else if (sortBy === 'date-asc') {
