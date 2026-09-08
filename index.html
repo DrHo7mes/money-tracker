@@ -10,9 +10,32 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Supabase Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- کتابخانه رسمی تقویم شمسی جلالی -->
+  <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
   <!-- فونت وزیرمتن -->
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              dark: '#123e37'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
     body { font-family: 'Vazirmatn', sans-serif; -webkit-tap-highlight-color: transparent; }
     .bottom-nav-active {
@@ -166,7 +189,7 @@
             </div>
           </div>
 
-          <!-- اقساط و چک‌های سررسید ماه جاری (دقیقاً زیر دو کارت هزینه و درآمد) -->
+          <!-- اقساط و چک‌های سررسید ماه جاری -->
           <div class="bg-white rounded-3xl border border-amber-100 p-5 shadow-sm">
             <div class="flex items-center justify-between mb-3 border-b border-slate-50 pb-2.5">
               <div class="flex items-center gap-1.5">
@@ -732,90 +755,9 @@
 
   <!-- ================= بخش اسکریپت با پایداری تضمین‌شده ================= -->
   <script>
-    // الگوریتم توکار تقویم جلالی برای رفع هرگونه وابستگی به CDN
-    const jalaali = {
-      toJalaali: function(gy, gm, gd) {
-        if (Object.prototype.toString.call(gy) === '[object Date]') {
-          gd = gy.getDate();
-          gm = gy.getMonth() + 1;
-          gy = gy.getFullYear();
-        }
-        return this.d2j(this.g2d(gy, gm, gd));
-      },
-      toGregorian: function(jy, jm, jd) {
-        return this.d2g(this.j2d(jy, jm, jd));
-      },
-      jalaaliMonthLength: function(jy, jm) {
-        if (jm <= 6) return 31;
-        if (jm <= 11) return 30;
-        return this.isLeapJalaaliYear(jy) ? 30 : 29;
-      },
-      isLeapJalaaliYear: function(jy) {
-        return this.jalCal(jy).leap === 0;
-      },
-      jalCal: function(jy) {
-        const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2099, 2192, 2262, 2324, 2394, 2456, 3178];
-        const bl = breaks.length;
-        const gy = jy + 621;
-        let leapJ = -14, jp = breaks[0], jm, jump, leap, n, i;
-        for (i = 1; i < bl; i += 1) {
-          jm = breaks[i];
-          jump = jm - jp;
-          if (jy < jm) break;
-          leapJ = leapJ + Math.floor(jump / 33) * 8 + Math.floor((jump % 33) / 4);
-          jp = jm;
-        }
-        n = jy - jp;
-        leapJ = leapJ + Math.floor(n / 33) * 8 + Math.floor(((n % 33) + 3) / 4);
-        if ((jump % 33) === 4 && jump - n === 4) leapJ += 1;
-        const leapG = Math.floor(gy / 4) - Math.floor(((Math.floor(gy / 100) + 1) * 3) / 4) - 150;
-        const march = 20 + leapJ - leapG;
-        if (jump - n < 6) n = n - jump + Math.floor((jump + 4) / 33) * 33 + 1;
-        leap = ((((n + 1) % 33) - 1) % 4);
-        if (leap === -1) leap = 4;
-        return { leap: leap, gy: gy, march: march };
-      },
-      j2d: function(jy, jm, jd) {
-        const r = this.jalCal(jy);
-        return this.g2d(r.gy, 3, r.march) + (jm - 1) * 31 - Math.floor(jm / 7) * (jm - 7) + jd - 1;
-      },
-      d2j: function(jdn) {
-        const gy = this.d2g(jdn).gy;
-        let jy = gy - 621;
-        const r = this.jalCal(jy);
-        const jdn1f = this.g2d(r.gy, 3, r.march);
-        let k = jdn - jdn1f;
-        if (k >= 0) {
-          if (k <= 185) return { jy: jy, jm: 1 + Math.floor(k / 31), jd: (k % 31) + 1 };
-          k -= 186;
-          return { jy: jy, jm: 7 + Math.floor(k / 30), jd: (k % 30) + 1 };
-        }
-        jy -= 1;
-        k += 179;
-        if (r.leap === 1) k += 1;
-        return { jy: jy, jm: 7 + Math.floor(k / 30), jd: (k % 30) + 1 };
-      },
-      g2d: function(gy, gm, gd) {
-        let d = Math.floor((gy + Math.floor((gm - 8) / 6) + 100100) * 1461 / 4)
-            + Math.floor((153 * ((gm + 9) % 12) + 2) / 5) + gd - 34840408;
-        d = d - Math.floor(Math.floor((gy + 100100 + Math.floor((gm - 8) / 6)) / 100) * 3 / 4) + 752;
-        return d;
-      },
-      d2g: function(jdn) {
-        let j = 4 * jdn + 1393616;
-        j = j + Math.floor(Math.floor((4 * jdn + 183187717) / 146097) * 3 / 4) * 4 - 3908;
-        const i = Math.floor((j % 1461) / 4) * 5 + 308;
-        const gd = Math.floor((i % 153) / 5) + 1;
-        const gm = ((Math.floor(i / 153) + 2) % 12) + 1;
-        const gy = Math.floor(j / 1461) - 100100 + Math.floor((8 - gm) / 6);
-        return { gy: gy, gm: gm, gd: gd };
-      }
-    };
-
     const SUPABASE_URL = 'https://hxwnerhpecqdqcvnvuhn.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_KnjuoFJZsAqLyebz98F9HQ_IU7G1EmJ';
     
-    // کلاینت امن سوپابیس با پایداری نشست
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
         persistSession: true,
@@ -841,7 +783,7 @@
     let actualTotalBalance = 0;
     let userFavoriteAccountIds = [];
 
-    // بارگذاری تنظیمات کاربر (با اولویت حافظه محلی و پشتیبانی دیتابیس)
+    // بارگذاری تنظیمات کاربر
     async function loadUserProfileSettings(userId) {
       const localHidden = localStorage.getItem('is_balance_hidden_' + userId);
       if (localHidden !== null) isBalanceHidden = localHidden === 'true';
@@ -1169,6 +1111,7 @@
       badge.classList.remove('hidden');
     }
 
+    // ================= توابع استاندارد و رسمی تبدیل تاریخ =================
     function getTodayShamsi() {
       const now = new Date();
       return jalaali.toJalaali(now.getFullYear(), now.getMonth() + 1, now.getDate());
@@ -1372,7 +1315,6 @@
       if (tabName === 'obligations') renderObligationsTab();
     }
 
-    // لود مرحله‌ای و ایمن بدون توقف
     async function refreshAll() {
       await fetchAccounts();
       await fetchObligations();
@@ -1882,7 +1824,6 @@
       switchTab('dashboard');
     }
 
-    // لود امن آمار و پر کردن تضمینی تراکنش‌های اخیر
     async function loadDashboardStats() {
       try {
         const { data, error } = await client.from('transactions').select('*').order('transaction_date', { ascending: false });
