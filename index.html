@@ -166,7 +166,7 @@
         <!-- چیدمان ردیف میانی داشبورد: اندازه خانه‌ها کاملاً برابر و عناوین بدون کلمه داشبورد -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
           
-          <!-- ۱. ستون اول سمت راست: لیست عمودی حساب‌های پرتکرار (حداکثر ۴ حساب) -->
+          <!-- ۱. ستون اول سمت راست: لیست عمودی حساب‌های پرتکرار یا با بیشترین تعداد تراکنش (حداکثر ۴ حساب) -->
           <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm h-full flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
@@ -174,7 +174,7 @@
                   <span class="text-lg">⚡</span>
                   <div>
                     <h3 class="font-bold text-slate-800 text-xs sm:text-sm">حساب‌های پرتکرار</h3>
-                    <p class="text-[10px] text-slate-400 mt-0.5">بیشترین تعداد تراکنش (موجودی لحظه‌ای)</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">ترتیب بر مبنای بیشترین تراکنش (موجودی لحظه‌ای)</p>
                   </div>
                 </div>
                 <button onclick="switchTab('accounts')" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">همه ←</button>
@@ -483,7 +483,6 @@
           </div>
         </div>
 
-        <!-- نمودارهای دایره‌ای در تب گزارش‌ها -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
             <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-rose-600">
@@ -509,7 +508,7 @@
         </div>
       </section>
 
-      <!-- تب ۸: همه تراکنش‌ها (آخرین بخش بر اساس درخواست شما، با فیلتر روز، ماه، سال) -->
+      <!-- تب ۸: همه تراکنش‌ها -->
       <section id="view-all-transactions" class="space-y-6 hidden">
         <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
           <div class="flex items-center justify-between mb-4">
@@ -523,7 +522,6 @@
             <button onclick="resetAllTxFilters()" class="text-xs text-rose-500 hover:text-rose-700 font-medium">بازنشانی فیلترها 🔄</button>
           </div>
 
-          <!-- جعبه فیلتر پیشرفته بر اساس روز، ماه، سال و بانک -->
           <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200/70 mb-4 text-xs">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               <div>
@@ -559,7 +557,7 @@
               </div>
             </div>
 
-            <!-- فیلتر تفکیک‌شده تقویم شمسی (سال، ماه، روز) -->
+            <!-- فیلتر تفکیک‌شده تقویم شمسی -->
             <div class="border-t border-slate-200/60 pt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label class="block mb-1 text-slate-600 font-medium">📅 سال شمسی:</label>
@@ -1451,7 +1449,7 @@
       switchTab('dashboard');
     }
 
-    // واکشی اطلاعات داشبورد (حساب‌های پرتکرار حداکثر ۴ حساب)
+    // واکشی اطلاعات داشبورد: اگر حساب پرتکراری نبود، حساب‌ها بر اساس بیشترین تراکنش یا موجودی چیده می‌شوند
     async function loadDashboardStats() {
       const { data: txs } = await client.from('transactions').select('*').order('transaction_date', { ascending: false });
       allTransactions = txs || [];
@@ -1479,11 +1477,14 @@
       document.getElementById('dash-total-income').innerText = `${Number(totalInc).toLocaleString('fa-IR')} تومان`;
       document.getElementById('dash-total-expense').innerText = `${Number(totalExp).toLocaleString('fa-IR')} تومان`;
 
-      // محدود به حداکثر ۴ حساب برتر
+      // منطق هوشمند: مرتب‌سازی بر اساس بیشترین تعداد تراکنش؛ اگر تعداد تراکنش برابر یا صفر بود، بر اساس بیشترین موجودی
       const sortedAccs = [...currentAccounts].sort((a, b) => {
         const countA = accUsage[a.id] || 0;
         const countB = accUsage[b.id] || 0;
-        return countB - countA;
+        if (countB !== countA) {
+          return countB - countA;
+        }
+        return parseFloat(b.balance || 0) - parseFloat(a.balance || 0);
       }).slice(0, 4);
 
       const freqContainer = document.getElementById('frequent-accounts-list');
@@ -1500,7 +1501,7 @@
                 <span class="w-8 h-8 rounded-lg bg-emerald-100/70 text-emerald-700 flex items-center justify-center font-bold text-xs">💳</span>
                 <div>
                   <p class="font-bold text-xs text-slate-800">${acc.name}</p>
-                  <p class="text-[10px] text-slate-400 mt-0.5">${usageCount} تراکنش ثبت شده</p>
+                  <p class="text-[10px] text-slate-400 mt-0.5">${usageCount > 0 ? `${usageCount} تراکنش ثبت شده` : 'بدون تراکنش (پیش‌فرض)'}</p>
                 </div>
               </div>
               <div class="text-left">
