@@ -74,11 +74,11 @@
             <label class="block text-xs font-semibold text-slate-600 mb-1">رمز عبور</label>
             <input id="login-password" type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition">
           </div>
-          <button onclick="loginUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm mt-2 flex items-center justify-center gap-2">
+          <button type="button" onclick="loginUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm mt-2 flex items-center justify-center gap-2">
             <span>ورود به حساب</span>
             <span>←</span>
           </button>
-          <button onclick="showSignUpScreen()" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-medium py-3 rounded-2xl transition text-xs border border-slate-200">ساخت حساب کاربری جدید</button>
+          <button type="button" onclick="showSignUpScreen()" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-medium py-3 rounded-2xl transition text-xs border border-slate-200">ساخت حساب کاربری جدید</button>
         </div>
         <p id="login-msg" class="text-xs text-center mt-4 text-rose-500 hidden"></p>
       </div>
@@ -99,8 +99,8 @@
             <label class="block text-xs font-semibold text-slate-600 mb-1">رمز عبور (حداقل ۶ کاراکتر)</label>
             <input id="signup-password" type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition">
           </div>
-          <button onclick="registerUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm mt-2">ثبت‌نام در سامانه</button>
-          <button onclick="showLoginScreen()" class="w-full text-slate-500 hover:text-slate-700 py-2.5 text-xs font-medium">قبلاً حساب داشته‌اید؟ بازگشت به ورود</button>
+          <button type="button" onclick="registerUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-600/25 text-sm mt-2">ثبت‌نام در سامانه</button>
+          <button type="button" onclick="showLoginScreen()" class="w-full text-slate-500 hover:text-slate-700 py-2.5 text-xs font-medium">قبلاً حساب داشته‌اید؟ بازگشت به ورود</button>
         </div>
         <p id="signup-msg" class="text-xs text-center mt-4 hidden"></p>
       </div>
@@ -110,14 +110,14 @@
         <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">📬</div>
         <h2 class="text-lg font-black text-slate-800 mb-2">ایمیل فعال‌سازی ارسال شد!</h2>
         <p class="text-xs text-slate-600 leading-relaxed mb-6">یک لینک تأیید به ایمیل شما ارسال شد. لطفاً آن را تأیید کرده و سپس وارد شوید.</p>
-        <button onclick="showLoginScreen()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl transition text-xs">بازگشت به صفحه ورود</button>
+        <button type="button" onclick="showLoginScreen()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl transition text-xs">بازگشت به صفحه ورود</button>
       </div>
     </div>
 
     <!-- ================= بخش ۲: بدنه اصلی اپلیکیشن ================= -->
     <div id="app-container" class="flex-1 flex flex-col hidden bg-white">
       
-      <!-- هدر اختصاصی برنامه مطابق تصویر با آواتار و پیام خوش‌آمدگویی -->
+      <!-- هدر اختصاصی برنامه -->
       <header class="px-5 pt-5 pb-3 flex items-center justify-between border-b border-slate-50 bg-white sticky top-0 z-30">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-black text-sm shadow-md overflow-hidden ring-2 ring-emerald-500/30">
@@ -169,7 +169,6 @@
 
           <!-- دو کارت خلاصه دخل و خرج ماه جاری -->
           <div class="grid grid-cols-2 gap-3">
-            <!-- هزینه ماه جاری -->
             <div class="bg-rose-50/60 border border-rose-100/80 p-4 rounded-3xl flex flex-col justify-between">
               <div class="flex items-center justify-between text-[11px] text-rose-500 font-semibold mb-2">
                 <span>هزینه ماه جاری</span>
@@ -181,7 +180,6 @@
               </div>
             </div>
 
-            <!-- درآمد ماه جاری -->
             <div class="bg-emerald-50/60 border border-emerald-100/80 p-4 rounded-3xl flex flex-col justify-between">
               <div class="flex items-center justify-between text-[11px] text-emerald-600 font-semibold mb-2">
                 <span>درآمد ماه جاری</span>
@@ -197,7 +195,6 @@
           <!-- بخش نمودار دایره‌ای توزیع هزینه‌ها -->
           <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
             <h4 class="font-bold text-slate-800 text-xs mb-4">توزیع هزینه‌ها</h4>
-            
             <div class="flex items-center justify-between gap-4">
               <div class="w-32 h-32 relative flex-shrink-0">
                 <canvas id="dashExpenseChart"></canvas>
@@ -498,6 +495,248 @@
 
   </div>
 
+  <!-- ================= مودال‌ها ================= -->
+
+  <!-- مودال: ثبت درآمد -->
+  <div id="modal-add-income" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3.5 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5 text-emerald-600">
+        <span>+</span><span>ثبت درآمد جدید</span>
+      </h3>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">مبلغ دریافتی (تومان)</label>
+        <input id="inc-amount" type="number" placeholder="مثلاً: 12500000" oninput="updateLiveReadableAmount('inc-amount', 'inc-amount-badge')" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-bold text-slate-800">
+        <div id="inc-amount-badge" class="text-[11px] text-emerald-600 font-bold mt-1 hidden bg-emerald-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">بخش درآمد</label>
+          <select id="inc-main-cat" onchange="loadSubCats('income')" class="w-full px-2.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">زیربخش</label>
+          <select id="inc-sub-cat" class="w-full px-2.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        </div>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">واریز به حساب:</label>
+        <select id="inc-account" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-bold"></select>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">توضیحات (اختیاری)</label>
+        <input id="inc-desc" type="text" placeholder="شرح درآمد..." class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-add-income')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button onclick="submitIncome()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ثبت درآمد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ثبت هزینه -->
+  <div id="modal-add-expense" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3.5 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5 text-rose-500">
+        <span>−</span><span>ثبت هزینه جدید</span>
+      </h3>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">مبلغ پرداختی (تومان)</label>
+        <input id="exp-amount" type="number" placeholder="مثلاً: 250000" oninput="updateLiveReadableAmount('exp-amount', 'exp-amount-badge')" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-bold text-rose-600">
+        <div id="exp-amount-badge" class="text-[11px] text-rose-600 font-bold mt-1 hidden bg-rose-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">بخش هزینه</label>
+          <select id="exp-main-cat" onchange="loadSubCats('expense')" class="w-full px-2.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">زیربخش</label>
+          <select id="exp-sub-cat" class="w-full px-2.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        </div>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">کسر از حساب:</label>
+        <select id="exp-account" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-bold"></select>
+      </div>
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1">توضیحات (اختیاری)</label>
+        <input id="exp-desc" type="text" placeholder="بابت چه چیزی..." class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-add-expense')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button onclick="submitExpense()" class="px-4 py-2 rounded-xl bg-rose-500 text-white font-bold shadow-md shadow-rose-500/20">ثبت هزینه</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: تعریف حساب بانکی -->
+  <div id="modal-account" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3.5 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>💳</span><span>تعریف حساب بانکی جدید</span>
+      </h3>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">انتخاب بانک یا کیف پول</label>
+        <select id="new-acc-bank-select" onchange="handleAccountBankChange()" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        <input id="new-acc-custom-bank" type="text" placeholder="نام بانک خود را بنویسید..." class="w-full mt-2 px-3 py-2 rounded-2xl border border-emerald-300 hidden bg-emerald-50/40">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">پسوند نام حساب یا ۴ رقم کارت (اختیاری)</label>
+        <input id="new-acc-suffix" type="text" placeholder="مثلاً: کارت اصلی، پس‌انداز" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">موجودی اولیه (تومان)</label>
+        <input id="new-acc-balance" type="number" placeholder="مثلاً: 2500000" oninput="updateLiveReadableAmount('new-acc-balance', 'acc-balance-badge')" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        <div id="acc-balance-badge" class="text-[11px] text-emerald-700 font-bold mt-1 hidden bg-emerald-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-account')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button onclick="saveAccount()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ذخیره حساب</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ثبت قسط یا چک -->
+  <div id="modal-add-obligation" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>✍️</span><span>ثبت قسط یا چک جدید</span>
+      </h3>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">طرف حساب / بانک / لندتک</label>
+        <select id="ob-provider-select" onchange="handleObligationProviderChange()" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium"></select>
+        <input id="ob-custom-provider-input" type="text" placeholder="نام موسسه را بنویسید..." class="w-full mt-1.5 px-3 py-2 rounded-2xl border border-amber-300 hidden bg-amber-50/40">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">عنوان و شرح</label>
+        <input id="ob-new-title" type="text" placeholder="مثلاً: قسط وام مسکن" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">نوع</label>
+          <select id="ob-new-type" class="w-full px-2 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium">
+            <option value="loan">🏦 قسط وام</option>
+            <option value="check">📜 چک</option>
+            <option value="debt">🤝 قرض و بدهی</option>
+          </select>
+        </div>
+        <div>
+          <label class="block mb-1 text-slate-600 font-medium">مبلغ (تومان)</label>
+          <input id="ob-new-amount" type="number" placeholder="۰" oninput="updateLiveReadableAmount('ob-new-amount', 'ob-amount-badge')" class="w-full px-2 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        </div>
+      </div>
+      <div id="ob-amount-badge" class="text-[11px] text-amber-700 font-bold hidden bg-amber-50 py-1 px-2 rounded-lg"></div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">تاریخ سررسید (شمسی)</label>
+        <div class="grid grid-cols-3 gap-1.5">
+          <input id="ob-shamsi-year" type="number" value="1405" class="px-2 py-2 rounded-xl border text-center font-bold">
+          <select id="ob-shamsi-month" class="px-1 py-2 rounded-xl border text-center font-bold bg-white"></select>
+          <input id="ob-shamsi-day" type="number" min="1" max="31" value="1" class="px-2 py-2 rounded-xl border text-center font-bold">
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-add-obligation')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button onclick="submitObligation()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ثبت موعد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ویرایش حساب بانکی -->
+  <div id="modal-edit-account" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3.5 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>✏️</span><span>ویرایش حساب بانکی</span>
+      </h3>
+      <input type="hidden" id="edit-acc-id">
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">نام حساب</label>
+        <input id="edit-acc-name" type="text" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">موجودی (تومان)</label>
+        <input id="edit-acc-balance" type="number" oninput="updateLiveReadableAmount('edit-acc-balance', 'edit-acc-balance-badge')" class="w-full px-3 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        <div id="edit-acc-balance-badge" class="text-[11px] text-emerald-700 font-bold mt-1 hidden bg-emerald-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-edit-account')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button onclick="updateAccountSubmit()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">به‌روزرسانی</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ویرایش تراکنش -->
+  <div id="modal-edit-tx" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>✏️</span><span>ویرایش تراکنش</span>
+      </h3>
+      <input type="hidden" id="edit-tx-id">
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">مبلغ (تومان)</label>
+        <input id="edit-tx-amount" type="number" oninput="updateLiveReadableAmount('edit-tx-amount', 'edit-tx-amount-badge')" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        <div id="edit-tx-amount-badge" class="text-[11px] text-emerald-700 font-bold mt-1 hidden bg-emerald-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">دسته‌بندی</label>
+        <input id="edit-tx-cat" type="text" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">تاریخ تراکنش (شمسی)</label>
+        <div class="grid grid-cols-3 gap-1.5">
+          <input id="edit-tx-year" type="number" class="px-2 py-2 border rounded-xl text-center font-bold">
+          <select id="edit-tx-month" class="px-1 py-2 border rounded-xl text-center font-bold bg-white"></select>
+          <input id="edit-tx-day" type="number" min="1" max="31" class="px-2 py-2 border rounded-xl text-center font-bold">
+        </div>
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">توضیحات</label>
+        <input id="edit-tx-desc" type="text" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-edit-tx')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button onclick="updateTxSubmit()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ذخیره</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال: ویرایش چک یا قسط -->
+  <div id="modal-edit-ob" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3 text-xs">
+      <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <span>✏️</span><span>ویرایش چک یا قسط</span>
+      </h3>
+      <input type="hidden" id="edit-ob-id">
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">عنوان</label>
+        <input id="edit-ob-title" type="text" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-medium">
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">مبلغ (تومان)</label>
+        <input id="edit-ob-amount" type="number" oninput="updateLiveReadableAmount('edit-ob-amount', 'edit-ob-amount-badge')" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+        <div id="edit-ob-amount-badge" class="text-[11px] text-amber-700 font-bold mt-1 hidden bg-amber-50 py-1 px-2 rounded-lg"></div>
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">تاریخ سررسید (شمسی)</label>
+        <div class="grid grid-cols-3 gap-1.5">
+          <input id="edit-ob-year" type="number" class="px-2 py-2 border rounded-xl text-center font-bold">
+          <select id="edit-ob-month" class="px-1 py-2 border rounded-xl text-center font-bold bg-white"></select>
+          <input id="edit-ob-day" type="number" min="1" max="31" class="px-2 py-2 border rounded-xl text-center font-bold">
+        </div>
+      </div>
+      <div>
+        <label class="block mb-1 text-slate-600 font-medium">وضعیت</label>
+        <select id="edit-ob-status" class="w-full px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200 font-bold">
+          <option value="pending">در انتظار پرداخت</option>
+          <option value="paid">پرداخت شده</option>
+        </select>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-edit-ob')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-medium">انصراف</button>
+        <button onclick="updateObSubmit()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20">ذخیره</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= بخش کدهای اسکریپت ================= -->
   <script>
     const SUPABASE_URL = 'https://hxwnerhpecqdqcvnvuhn.supabase.co';
@@ -543,7 +782,9 @@
 
     const OBLIGATION_PROVIDERS = [
       'اسنپ‌پی (SnappPay)', 'دیجی‌پی (DigiPay)', 'تارا (Tara)', 'ازکی‌وام (AzkiVam)',
-      'لندو (Lando)', 'قسط وام خودرو', 'قسط وام مسکن', 'بانک ملت', 'بانک سامان', 'بانک رسالت', 'شخصی / قرض متفرقه', '✏️ سایر (تایپ دستی)'
+      'لندو (Lando)', 'وام‌بانکی - بانک رسالت', 'وام‌بانکی - بانک مهر ایران', 'وام مسکن (بانک مسکن)',
+      'بانک ملی', 'بانک ملت', 'بانک صادرات', 'بانک تجارت', 'بانک سپه',
+      'بانک پاسارگاد', 'بانک سامان', 'شخصی / قرض متفرقه', '✏️ سایر (تایپ دستی)'
     ];
 
     const shamsiMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
@@ -1418,18 +1659,15 @@
         sortedAccs.forEach(acc => {
           const usageCount = accUsage[acc.id] || 0;
           freqContainer.innerHTML += `
-            <div class="border border-slate-100 bg-slate-50/80 hover:bg-slate-100/80 p-3 rounded-xl flex items-center justify-between transition">
+            <div class="flex items-center justify-between py-1.5 border-b border-slate-50 last:border-none">
               <div class="flex items-center gap-2">
-                ${getBankLogoHtml(acc.name, "w-8 h-8")}
+                <span class="text-xs">💳</span>
                 <div>
-                  <p class="font-bold text-xs text-slate-800">${acc.name}</p>
-                  <p class="text-[10px] text-slate-400 mt-0.5">${usageCount > 0 ? `${usageCount} تراکنش ثبت شده` : 'بدون تراکنش'}</p>
+                  <span class="font-bold text-xs text-slate-800 block">${acc.name}</span>
+                  <span class="text-[9px] text-slate-400 font-light block">${count} تراکنش</span>
                 </div>
               </div>
-              <div class="text-left">
-                <span class="text-xs font-black text-emerald-600 block">${Number(acc.balance).toLocaleString('fa-IR')}</span>
-                <span class="text-[9px] text-slate-400 font-light">تومان</span>
-              </div>
+              <span class="text-xs font-black text-emerald-600">${Number(acc.balance).toLocaleString('fa-IR')} ت</span>
             </div>
           `;
         });
@@ -1729,7 +1967,7 @@
       refreshAll();
     }
 
-    // حذف تراکنش (اصلاح شده: تریگر دیتابیس به تنهایی و بدون تکرار موجودی را معکوس می‌کند)
+    // اصلاح قطعی: حذف کد اضافی بازگشت موجودی در جی‌اس و اتکا به تریگر دیتابیس برای جلوگیری از محاسبه دوگانه
     async function deleteTransaction(id) {
       if (!confirm('آیا از حذف این تراکنش مطمئن هستید؟')) return;
       const { error } = await client.from('transactions').delete().eq('id', id);
