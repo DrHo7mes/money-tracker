@@ -10,7 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Supabase Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- کتابخانه رسمی و استاندارد تبدیل تقویم شمسی -->
+  <!-- کتابخانه رسمی تقویم شمسی -->
   <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
   <!-- فونت وزیرمتن -->
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
@@ -27,7 +27,6 @@
 
   <!-- ================= بخش ۱: احراز هویت ================= -->
   <div id="auth-container" class="flex min-h-screen items-center justify-center p-4">
-    <!-- فرم ورود -->
     <div id="login-card" class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-slate-100">
       <div class="text-center mb-6">
         <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 mb-3 text-2xl">🔐</div>
@@ -49,7 +48,6 @@
       <p id="login-msg" class="text-xs text-center mt-4 text-rose-500 hidden"></p>
     </div>
 
-    <!-- فرم ثبت‌نام -->
     <div id="signup-card" class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-slate-100 hidden">
       <div class="text-center mb-6">
         <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 mb-3 text-2xl">📝</div>
@@ -71,7 +69,6 @@
       <p id="signup-msg" class="text-xs text-center mt-4 hidden"></p>
     </div>
 
-    <!-- تأیید ایمیل -->
     <div id="confirm-email-card" class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-slate-100 text-center hidden">
       <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">📬</div>
       <h2 class="text-lg font-black text-slate-800 mb-2">ایمیل فعال‌سازی ارسال شد!</h2>
@@ -84,7 +81,6 @@
 
   <!-- ================= بخش ۲: سامانه اصلی ================= -->
   <div id="app-container" class="hidden">
-    <!-- هدر بالای صفحه -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
       <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -100,7 +96,7 @@
         </div>
       </div>
 
-      <!-- تب‌های ناوبری -->
+      <!-- تب‌های ناوبری (شامل تب انتقال وجه) -->
       <nav class="max-w-6xl mx-auto px-4 flex gap-5 overflow-x-auto text-xs font-medium text-slate-500 border-t border-slate-100">
         <button onclick="switchTab('dashboard')" id="tab-dashboard" class="py-3 border-b-2 border-transparent transition tab-active flex items-center gap-1.5 whitespace-nowrap">
           <span>📊</span><span>داشبورد</span>
@@ -114,6 +110,9 @@
         <button onclick="switchTab('expense')" id="tab-expense" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
           <span>📤</span><span>هزینه</span>
         </button>
+        <button onclick="switchTab('transfer')" id="tab-transfer" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>🔄</span><span>انتقال بین حساب‌ها</span>
+        </button>
         <button onclick="switchTab('obligations')" id="tab-obligations" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
           <span>🗓️</span><span>اقساط و چک‌ها</span>
         </button>
@@ -123,7 +122,6 @@
       </nav>
     </header>
 
-    <!-- هشدار ۴۸ ساعته چک‌ها و اقساط -->
     <div id="reminder-box" class="max-w-6xl mx-auto px-4 mt-4 hidden">
       <div class="bg-amber-50 border-r-4 border-amber-500 p-4 rounded-2xl shadow-sm">
         <div class="flex items-center gap-2 text-amber-900 font-bold text-xs sm:text-sm">
@@ -134,12 +132,10 @@
       </div>
     </div>
 
-    <!-- بدنه اصلی -->
     <main class="max-w-6xl mx-auto px-4 py-6">
 
       <!-- تب ۱: داشبورد -->
       <section id="view-dashboard" class="space-y-6">
-        <!-- کارت‌های آمار کل -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
             <div>
@@ -216,7 +212,7 @@
           <div id="frequent-accounts-list" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
         </div>
 
-        <!-- آخرین تراکنش‌ها با امکان ویرایش و حذف -->
+        <!-- آخرین تراکنش‌ها -->
         <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
           <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center gap-1.5">
             <span>📋</span><span>آخرین تراکنش‌های ثبت‌شده</span>
@@ -325,7 +321,46 @@
         </div>
       </section>
 
-      <!-- تب ۵: اقساط و چک‌ها -->
+      <!-- تب ۵: انتقال بین حساب‌های خود (ویژگی جدید) -->
+      <section id="view-transfer" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm max-w-xl mx-auto">
+          <h2 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
+            <span class="text-blue-600 text-xl">🔄</span>
+            <span>انتقال و جابه‌جایی بین حساب‌های خود</span>
+          </h2>
+          <p class="text-[11px] text-slate-400 mb-4 leading-relaxed">
+            این تراکنش صرفاً موجودی حساب مبدأ را کاهش و مقصد را افزایش می‌دهد و در مجموع هزینه‌ها یا درآمدهای شما محاسبه نمی‌شود.
+          </p>
+
+          <div class="space-y-4 text-xs">
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">💸 مبلغ انتقالی (تومان)</label>
+              <input id="trans-amount" type="number" placeholder="مثلاً: 1000000" oninput="updateLiveReadableAmount('trans-amount', 'trans-amount-badge')" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-600">
+              <div id="trans-amount-badge" class="text-[11px] text-blue-600 font-bold mt-1.5 hidden bg-blue-50 py-1 px-2.5 rounded-lg border border-blue-100"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">📤 از حساب مبدأ (کسر شود):</label>
+                <select id="trans-from-account" class="w-full px-3 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-white"></select>
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">📥 به حساب مقصد (واریز شود):</label>
+                <select id="trans-to-account" class="w-full px-3 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-white"></select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">📝 بابت / توضیحات انتقال (اختیاری)</label>
+              <input id="trans-desc" type="text" placeholder="مثلاً: انتقال به کارت خرید روزانه، پس‌انداز ماهانه..." class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+
+            <button onclick="submitTransfer()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md shadow-blue-200">ثبت انتقال وجه و جابه‌جایی موجودی 🔄</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- تب ۶: اقساط و چک‌ها -->
       <section id="view-obligations" class="space-y-6 hidden">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm md:col-span-1">
@@ -396,7 +431,7 @@
         </div>
       </section>
 
-      <!-- تب ۶: گزارش‌ها -->
+      <!-- تب ۷: گزارش‌ها -->
       <section id="view-reports" class="space-y-6 hidden">
         <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
           <div class="flex items-center gap-2">
@@ -436,7 +471,6 @@
           </div>
         </div>
 
-        <!-- نمودارهای دایره‌ای در تب گزارش‌ها -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
             <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-rose-600">
@@ -648,7 +682,7 @@
       badge.classList.remove('hidden');
     }
 
-    // ================= تبدیل تاریخ با کتابخانه رسمی jalaali-js بدون خطای Timezone =================
+    // تبدیل رسمی و تضمینی تاریخ بدون خطای Timezone
     function getTodayShamsi() {
       const now = new Date();
       return jalaali.toJalaali(now.getFullYear(), now.getMonth() + 1, now.getDate());
@@ -854,7 +888,7 @@
     }
 
     function switchTab(tabName) {
-      ['dashboard', 'accounts', 'income', 'expense', 'obligations', 'reports'].forEach(tab => {
+      ['dashboard', 'accounts', 'income', 'expense', 'transfer', 'obligations', 'reports'].forEach(tab => {
         document.getElementById(`view-${tab}`).classList.add('hidden');
         document.getElementById(`tab-${tab}`).classList.remove('tab-active');
       });
@@ -879,17 +913,21 @@
       renderDashboardCharts();
     }
 
-    // ۱. مدیریت حساب‌ها
+    // ۱. مدیریت حساب‌ها و سلکتورهای واریز، برداشت و انتقال
     async function fetchAccounts() {
       const { data } = await client.from('accounts').select('*').order('created_at', { ascending: true });
       currentAccounts = data || [];
 
       const incSelect = document.getElementById('inc-account');
       const expSelect = document.getElementById('exp-account');
+      const transFrom = document.getElementById('trans-from-account');
+      const transTo = document.getElementById('trans-to-account');
       const fullList = document.getElementById('full-accounts-list');
       
       incSelect.innerHTML = '';
       expSelect.innerHTML = '';
+      transFrom.innerHTML = '';
+      transTo.innerHTML = '';
       fullList.innerHTML = '';
 
       let total = 0;
@@ -898,6 +936,8 @@
         const opt = `<option value="${acc.id}">${acc.name} (موجودی: ${Number(acc.balance).toLocaleString('fa-IR')} ت)</option>`;
         incSelect.innerHTML += opt;
         expSelect.innerHTML += opt;
+        transFrom.innerHTML += opt;
+        transTo.innerHTML += opt;
 
         fullList.innerHTML += `
           <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
@@ -945,7 +985,7 @@
       refreshAll();
     }
 
-    // ۲. مدیریت چک‌ها و اقساط با تاریخ کاملاً دقیق
+    // ۲. مدیریت چک‌ها و اقساط
     async function fetchObligations() {
       const { data } = await client.from('obligations').select('*').order('due_date', { ascending: true });
       allObligations = data || [];
@@ -984,7 +1024,6 @@
           </tr>
         `;
 
-        // فیلتر برای ماه جاری
         if (obSh.jy === currentSh.jy && obSh.jm === currentSh.jm) {
           monthlyCount++;
           dashMonthlyBox.innerHTML += `
@@ -1076,7 +1115,6 @@
       if (!amount || amount <= 0) return alert('لطفاً مبلغ معتبر برای چک یا قسط را وارد نمایید.');
 
       const fullTitle = `[${finalProvider}] ${title}`;
-      // تاریخ به صورت مستقیم به فرمت استاندارد YYYY-MM-DD ذخیره می‌شود
       const due_date = shamsiToIsoDate(jy, jm, jd);
 
       const { error } = await client.from('obligations').insert({
@@ -1154,7 +1192,7 @@
       }
     }
 
-    // ۳. ثبت تراکنش‌ها با افزایش و کسر قطعی موجودی
+    // ۳. ثبت درآمد، هزینه و انتقال بین حساب‌ها
     async function submitIncome() {
       const amount = parseFloat(document.getElementById('inc-amount').value || 0);
       const accId = document.getElementById('inc-account').value;
@@ -1231,6 +1269,52 @@
       switchTab('dashboard');
     }
 
+    // منطق اختصاصی انتقال بین حساب‌ها (بدون ورود به درآمد و هزینه)
+    async function submitTransfer() {
+      const amount = parseFloat(document.getElementById('trans-amount').value || 0);
+      const fromAccId = document.getElementById('trans-from-account').value;
+      const toAccId = document.getElementById('trans-to-account').value;
+      const desc = document.getElementById('trans-desc').value.trim();
+      const user = (await client.auth.getUser()).data.user;
+
+      if (!amount || amount <= 0) return alert('مبلغ انتقالی را به درستی وارد نمایید.');
+      if (!fromAccId || !toAccId) return alert('حساب‌های مبدأ و مقصد را انتخاب کنید.');
+      if (fromAccId === toAccId) return alert('حساب مبدأ و مقصد نمی‌توانند یکسان باشند.');
+
+      const fromAcc = currentAccounts.find(a => a.id === fromAccId);
+      const toAcc = currentAccounts.find(a => a.id === toAccId);
+
+      if (!fromAcc || !toAcc) return alert('حساب نامعتبر است.');
+
+      // ثبت تراکنش با پر بودن هم‌زمان from و to
+      const { error: txErr } = await client.from('transactions').insert({
+        user_id: user.id,
+        amount: amount,
+        category_name: 'انتقال بین‌حساب‌ها',
+        description: desc || `انتقال از ${fromAcc.name} به ${toAcc.name}`,
+        from_account_id: fromAccId,
+        to_account_id: toAccId,
+        transaction_date: new Date().toISOString()
+      });
+
+      if (txErr) return alert('خطا در ثبت انتقال: ' + txErr.message);
+
+      // کسر از مبدأ و واریز به مقصد
+      const newFromBal = parseFloat(fromAcc.balance) - amount;
+      const newToBal = parseFloat(toAcc.balance) + amount;
+
+      await client.from('accounts').update({ balance: newFromBal }).eq('id', fromAccId);
+      await client.from('accounts').update({ balance: newToBal }).eq('id', toAccId);
+
+      document.getElementById('trans-amount').value = '';
+      document.getElementById('trans-desc').value = '';
+      document.getElementById('trans-amount-badge').classList.add('hidden');
+
+      alert(`مبلغ ${Number(amount).toLocaleString('fa-IR')} تومان از ${fromAcc.name} به ${toAcc.name} انتقال یافت.`);
+      await refreshAll();
+      switchTab('dashboard');
+    }
+
     async function loadDashboardStats() {
       const { data: txs } = await client.from('transactions').select('*').order('transaction_date', { ascending: false });
       allTransactions = txs || [];
@@ -1240,14 +1324,16 @@
 
       allTransactions.forEach(t => {
         const val = parseFloat(t.amount);
-        if (t.from_account_id) {
-          totalExp += val;
-          accUsage[t.from_account_id] = (accUsage[t.from_account_id] || 0) + 1;
+        const isTransfer = t.from_account_id && t.to_account_id;
+
+        // اگر انتقال باشد، در جمع درآمد و هزینه لحاظ نمی‌شود
+        if (!isTransfer) {
+          if (t.from_account_id) totalExp += val;
+          if (t.to_account_id) totalInc += val;
         }
-        if (t.to_account_id) {
-          totalInc += val;
-          accUsage[t.to_account_id] = (accUsage[t.to_account_id] || 0) + 1;
-        }
+
+        if (t.from_account_id) accUsage[t.from_account_id] = (accUsage[t.from_account_id] || 0) + 1;
+        if (t.to_account_id) accUsage[t.to_account_id] = (accUsage[t.to_account_id] || 0) + 1;
       });
 
       document.getElementById('dash-total-income').innerText = `${Number(totalInc).toLocaleString('fa-IR')} تومان`;
@@ -1272,17 +1358,32 @@
       const recentTbody = document.getElementById('dash-recent-tx');
       recentTbody.innerHTML = '';
       allTransactions.slice(0, 10).forEach(t => {
-        const isExp = t.from_account_id !== null;
-        const matchedAcc = currentAccounts.find(a => a.id === (isExp ? t.from_account_id : t.to_account_id));
+        const isTransfer = t.from_account_id && t.to_account_id;
+        const isExp = t.from_account_id !== null && !isTransfer;
+
+        let accDisplayName = '-';
+        if (isTransfer) {
+          const fromAcc = currentAccounts.find(a => a.id === t.from_account_id);
+          const toAcc = currentAccounts.find(a => a.id === t.to_account_id);
+          accDisplayName = `${fromAcc?.name || 'مبدأ'} ⬅️ ${toAcc?.name || 'مقصد'}`;
+        } else {
+          const matchedAcc = currentAccounts.find(a => a.id === (isExp ? t.from_account_id : t.to_account_id));
+          accDisplayName = matchedAcc?.name || '-';
+        }
+
+        let amountHtml = '';
+        if (isTransfer) {
+          amountHtml = `<span class="text-blue-600 font-bold">🔄 ${Number(t.amount).toLocaleString('fa-IR')}</span>`;
+        } else {
+          amountHtml = `<span class="font-bold ${isExp ? 'text-rose-600' : 'text-emerald-600'}">${isExp ? '-' : '+'}${Number(t.amount).toLocaleString('fa-IR')}</span>`;
+        }
 
         recentTbody.innerHTML += `
           <tr class="hover:bg-slate-50">
-            <td class="py-2 px-3 font-medium">${t.category_name || '-'}</td>
-            <td class="py-2 px-3 text-slate-500">${matchedAcc?.name || '-'}</td>
+            <td class="py-2 px-3 font-medium ${isTransfer ? 'text-blue-600' : ''}">${t.category_name || '-'}</td>
+            <td class="py-2 px-3 text-slate-500">${accDisplayName}</td>
             <td class="py-2 px-3 text-slate-400 max-w-xs truncate">${t.description || '-'}</td>
-            <td class="py-2 px-3 font-bold ${isExp ? 'text-rose-600' : 'text-emerald-600'}">
-              ${isExp ? '-' : '+'}${Number(t.amount).toLocaleString('fa-IR')}
-            </td>
+            <td class="py-2 px-3">${amountHtml}</td>
             <td class="py-2 px-3 text-slate-400 font-medium">${formatToShamsiDate(t.transaction_date)}</td>
             <td class="py-2 px-3 text-center">
               <div class="flex items-center justify-center gap-1.5">
@@ -1295,13 +1396,15 @@
       });
     }
 
-    // رسم دو نمودار دایره‌ای روی داشبورد
     function renderDashboardCharts() {
       const expBreakdown = {};
       const incBreakdown = {};
       let totalExp = 0, totalInc = 0;
 
       allTransactions.forEach(t => {
+        // انتقال‌ها نباید وارد نمودارهای درآمد و هزینه شوند
+        if (t.from_account_id && t.to_account_id) return;
+
         const amt = parseFloat(t.amount);
         const cat = t.category_name || 'سایر';
         if (t.from_account_id) {
@@ -1349,19 +1452,29 @@
 
       if (!amount || amount <= 0) return alert('مبلغ نامعتبر است.');
 
-      const updatedDate = shamsiToIsoDate(jy, jm, jd);
+      const isoDate = shamsiToIsoDate(jy, jm, jd);
+      const updatedDate = `${isoDate}T12:00:00Z`;
 
       const oldTx = allTransactions.find(t => t.id === id);
       if (oldTx) {
         const diff = amount - parseFloat(oldTx.amount);
+        const isTransfer = oldTx.from_account_id && oldTx.to_account_id;
+
         if (diff !== 0) {
-          if (oldTx.from_account_id) {
-            const acc = currentAccounts.find(a => a.id === oldTx.from_account_id);
-            if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) - diff }).eq('id', acc.id);
-          }
-          if (oldTx.to_account_id) {
-            const acc = currentAccounts.find(a => a.id === oldTx.to_account_id);
-            if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) + diff }).eq('id', acc.id);
+          if (isTransfer) {
+            const fromAcc = currentAccounts.find(a => a.id === oldTx.from_account_id);
+            const toAcc = currentAccounts.find(a => a.id === oldTx.to_account_id);
+            if (fromAcc) await client.from('accounts').update({ balance: parseFloat(fromAcc.balance) - diff }).eq('id', fromAcc.id);
+            if (toAcc) await client.from('accounts').update({ balance: parseFloat(toAcc.balance) + diff }).eq('id', toAcc.id);
+          } else {
+            if (oldTx.from_account_id) {
+              const acc = currentAccounts.find(a => a.id === oldTx.from_account_id);
+              if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) - diff }).eq('id', acc.id);
+            }
+            if (oldTx.to_account_id) {
+              const acc = currentAccounts.find(a => a.id === oldTx.to_account_id);
+              if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) + diff }).eq('id', acc.id);
+            }
           }
         }
       }
@@ -1370,7 +1483,7 @@
         amount: amount,
         category_name: cat,
         description: desc,
-        transaction_date: `${updatedDate}T12:00:00Z`
+        transaction_date: updatedDate
       }).eq('id', id);
 
       if (error) return alert('خطا در به‌روزرسانی تراکنش: ' + error.message);
@@ -1384,13 +1497,22 @@
       const targetTx = allTransactions.find(t => t.id === id);
       if (targetTx) {
         const amt = parseFloat(targetTx.amount);
-        if (targetTx.from_account_id) {
-          const acc = currentAccounts.find(a => a.id === targetTx.from_account_id);
-          if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) + amt }).eq('id', acc.id);
-        }
-        if (targetTx.to_account_id) {
-          const acc = currentAccounts.find(a => a.id === targetTx.to_account_id);
-          if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) - amt }).eq('id', acc.id);
+        const isTransfer = targetTx.from_account_id && targetTx.to_account_id;
+
+        if (isTransfer) {
+          const fromAcc = currentAccounts.find(a => a.id === targetTx.from_account_id);
+          const toAcc = currentAccounts.find(a => a.id === targetTx.to_account_id);
+          if (fromAcc) await client.from('accounts').update({ balance: parseFloat(fromAcc.balance) + amt }).eq('id', fromAcc.id);
+          if (toAcc) await client.from('accounts').update({ balance: parseFloat(toAcc.balance) - amt }).eq('id', toAcc.id);
+        } else {
+          if (targetTx.from_account_id) {
+            const acc = currentAccounts.find(a => a.id === targetTx.from_account_id);
+            if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) + amt }).eq('id', acc.id);
+          }
+          if (targetTx.to_account_id) {
+            const acc = currentAccounts.find(a => a.id === targetTx.to_account_id);
+            if (acc) await client.from('accounts').update({ balance: parseFloat(acc.balance) - amt }).eq('id', acc.id);
+          }
         }
       }
 
@@ -1399,7 +1521,7 @@
       refreshAll();
     }
 
-    // ۴. بخش گزارش‌ها و نمودارهای دایره‌ای
+    // ۴. بخش گزارش‌ها
     async function loadShamsiReport() {
       const selected = document.getElementById('report-shamsi-month-select').value;
       if (!selected) return;
@@ -1421,6 +1543,9 @@
       const incBreakdown = {};
 
       (txs || []).forEach(t => {
+        // انتقال بین حساب‌ها در محاسبات سود و زیان گزارش محاسبه نمی‌شود
+        if (t.from_account_id && t.to_account_id) return;
+
         const val = parseFloat(t.amount);
         const cat = t.category_name || 'سایر';
         if (t.from_account_id) {
