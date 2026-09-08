@@ -96,13 +96,10 @@
         </div>
       </div>
 
-      <!-- تب‌های ناوبری -->
+      <!-- تب‌های ناوبری (بخش همه تراکنش‌ها به عنوان آخرین بخش قرار گرفت) -->
       <nav class="max-w-6xl mx-auto px-4 flex gap-5 overflow-x-auto text-xs font-medium text-slate-500 border-t border-slate-100">
         <button onclick="switchTab('dashboard')" id="tab-dashboard" class="py-3 border-b-2 border-transparent transition tab-active flex items-center gap-1.5 whitespace-nowrap">
           <span>📊</span><span>داشبورد</span>
-        </button>
-        <button onclick="switchTab('all-transactions')" id="tab-all-transactions" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
-          <span>📜</span><span>همه تراکنش‌ها</span>
         </button>
         <button onclick="switchTab('accounts')" id="tab-accounts" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
           <span>💳</span><span>حساب‌ها</span>
@@ -121,6 +118,9 @@
         </button>
         <button onclick="switchTab('reports')" id="tab-reports" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
           <span>📈</span><span>گزارش‌ها</span>
+        </button>
+        <button onclick="switchTab('all-transactions')" id="tab-all-transactions" class="py-3 border-b-2 border-transparent transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>📜</span><span>همه تراکنش‌ها</span>
         </button>
       </nav>
     </header>
@@ -163,9 +163,27 @@
           </div>
         </div>
 
-        <!-- ترکیب نمودارها و لیست عمودی حساب‌های پرتکرار در یک ردیف -->
+        <!-- چیدمان ردیف میانی داشبورد: حساب‌های پرتکرار در سمت راست، نمودارها در سمت چپ -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          <!-- نمودار هزینه -->
+          
+          <!-- ۱. ستون اول سمت راست: لیست عمودی حساب‌های پرتکرار -->
+          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">⚡</span>
+                  <div>
+                    <h3 class="font-bold text-slate-800 text-xs sm:text-sm">حساب‌های پرتکرار</h3>
+                    <p class="text-[10px] text-slate-400 mt-0.5">بیشترین تعداد تراکنش (موجودی لحظه‌ای)</p>
+                  </div>
+                </div>
+                <button onclick="switchTab('accounts')" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">همه ←</button>
+              </div>
+              <div id="frequent-accounts-list" class="space-y-3"></div>
+            </div>
+          </div>
+
+          <!-- ۲. نمودار هزینه -->
           <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
             <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-rose-600">
               <span>🍩</span><span>سهم هزینه‌ها در داشبورد</span>
@@ -177,7 +195,7 @@
             <div id="dash-exp-list" class="w-full mt-4 space-y-2 border-t border-slate-100 pt-3"></div>
           </div>
 
-          <!-- نمودار درآمد -->
+          <!-- ۳. نمودار درآمد -->
           <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col items-center">
             <h4 class="font-bold text-slate-800 text-xs mb-3 w-full text-right flex items-center gap-1.5 text-emerald-600">
               <span>🍩</span><span>سهم درآمدها در داشبورد</span>
@@ -189,22 +207,6 @@
             <div id="dash-inc-list" class="w-full mt-4 space-y-2 border-t border-slate-100 pt-3"></div>
           </div>
 
-          <!-- لیست عمودی حساب‌های پرتکرار -->
-          <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-                <div class="flex items-center gap-2">
-                  <span class="text-lg">⚡</span>
-                  <div>
-                    <h3 class="font-bold text-slate-800 text-xs sm:text-sm">حساب‌های پرتکرار</h3>
-                    <p class="text-[10px] text-slate-400 mt-0.5">بیشترین تعداد تراکنش (با موجودی لحظه‌ای)</p>
-                  </div>
-                </div>
-                <button onclick="switchTab('accounts')" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">همه ←</button>
-              </div>
-              <div id="frequent-accounts-list" class="space-y-3"></div>
-            </div>
-          </div>
         </div>
 
         <!-- چک‌ها و اقساط سررسید ماه جاری -->
@@ -245,80 +247,7 @@
         </div>
       </section>
 
-      <!-- تب ۲: همه تراکنش‌ها (فیلترها و مرتب‌سازی چندحالته) -->
-      <section id="view-all-transactions" class="space-y-6 hidden">
-        <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">📜</span>
-              <div>
-                <h3 class="font-bold text-slate-800 text-sm">مدیریت و لیست تمامی تراکنش‌ها</h3>
-                <p class="text-[11px] text-slate-400 mt-0.5">جستجو، فیلتر و مرتب‌سازی جامع تراکنش‌ها</p>
-              </div>
-            </div>
-            <button onclick="resetAllTxFilters()" class="text-xs text-rose-500 hover:text-rose-700 font-medium">بازنشانی فیلترها 🔄</button>
-          </div>
-
-          <!-- جعبه ابزار فیلتر و مرتب‌سازی -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200/70 mb-4">
-            <div>
-              <label class="block mb-1 text-slate-600 font-medium">مرتب‌سازی بر اساس:</label>
-              <select id="filter-sort-by" onchange="renderFilteredTransactions()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium">
-                <option value="date-desc">📅 تاریخ: از جدید به قدیم</option>
-                <option value="date-asc">📅 تاریخ: از قدیم به جدید</option>
-                <option value="amount-desc">💸 مبلغ: از بیشترین به کمترین</option>
-                <option value="amount-asc">💸 مبلغ: از کمترین به بیشترین</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block mb-1 text-slate-600 font-medium">فیلتر حساب بانکی:</label>
-              <select id="filter-account" onchange="renderFilteredTransactions()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium">
-                <option value="all">همه حساب‌ها</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block mb-1 text-slate-600 font-medium">نوع تراکنش:</label>
-              <select id="filter-type" onchange="renderFilteredTransactions()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium">
-                <option value="all">همه نوع‌ها</option>
-                <option value="expense">فقط هزینه‌ها</option>
-                <option value="income">فقط درآمدها</option>
-                <option value="transfer">فقط انتقال بین‌حساب‌ها</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block mb-1 text-slate-600 font-medium">جستجو در شرح و عنوان:</label>
-              <input id="filter-search-text" type="text" oninput="renderFilteredTransactions()" placeholder="مثلاً: حقوق، بنزین، اسنپ..." class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
-            </div>
-          </div>
-
-          <!-- آمار ردیف‌های فیلترشده -->
-          <div class="flex items-center justify-between text-xs text-slate-500 mb-2 px-1">
-            <span>تعداد تراکنش‌های یافت‌شده: <strong id="filtered-tx-count" class="text-slate-800">0</strong></span>
-            <span>مجموع مبالغ لیست: <strong id="filtered-tx-sum" class="text-emerald-600">0 تومان</strong></span>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-right text-xs">
-              <thead class="bg-slate-50 text-slate-500 border-b border-slate-100">
-                <tr>
-                  <th class="py-2.5 px-3">نوع / دسته‌بندی</th>
-                  <th class="py-2.5 px-3">حساب</th>
-                  <th class="py-2.5 px-3">توضیحات</th>
-                  <th class="py-2.5 px-3">مبلغ (تومان)</th>
-                  <th class="py-2.5 px-3">تاریخ شمسی</th>
-                  <th class="py-2.5 px-3 text-center">عملیات</th>
-                </tr>
-              </thead>
-              <tbody id="all-transactions-table-body" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- تب ۳: حساب‌ها -->
+      <!-- تب ۲: حساب‌ها -->
       <section id="view-accounts" class="space-y-6 hidden">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -332,7 +261,7 @@
         <div id="full-accounts-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
       </section>
 
-      <!-- تب ۴: درآمد -->
+      <!-- تب ۳: درآمد -->
       <section id="view-income" class="space-y-6 hidden">
         <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm max-w-xl mx-auto">
           <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -368,7 +297,7 @@
         </div>
       </section>
 
-      <!-- تب ۵: هزینه -->
+      <!-- تب ۴: هزینه -->
       <section id="view-expense" class="space-y-6 hidden">
         <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm max-w-xl mx-auto">
           <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -404,7 +333,7 @@
         </div>
       </section>
 
-      <!-- تب ۶: انتقال بین حساب‌های خود -->
+      <!-- تب ۵: انتقال بین حساب‌های خود -->
       <section id="view-transfer" class="space-y-6 hidden">
         <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm max-w-xl mx-auto">
           <h2 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
@@ -443,7 +372,7 @@
         </div>
       </section>
 
-      <!-- تب ۷: اقساط و چک‌ها -->
+      <!-- تب ۶: اقساط و چک‌ها -->
       <section id="view-obligations" class="space-y-6 hidden">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm md:col-span-1">
@@ -514,7 +443,7 @@
         </div>
       </section>
 
-      <!-- تب ۸: گزارش‌ها -->
+      <!-- تب ۷: گزارش‌ها -->
       <section id="view-reports" class="space-y-6 hidden">
         <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
           <div class="flex items-center gap-2">
@@ -576,6 +505,102 @@
             </div>
             <div id="rep-inc-chart-empty" class="text-xs text-slate-400 mt-4 hidden">هیچ درآمدی برای این ماه ثبت نشده است.</div>
             <div id="rep-inc-breakdown-list" class="w-full mt-4 space-y-2 border-t border-slate-100 pt-3"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- تب ۸: همه تراکنش‌ها (آخرین بخش بر اساس درخواست شما، با فیلتر روز، ماه، سال) -->
+      <section id="view-all-transactions" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">📜</span>
+              <div>
+                <h3 class="font-bold text-slate-800 text-sm">مدیریت و لیست تمامی تراکنش‌ها</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">فیلتر پیشرفته بر اساس روز، ماه، سال و حساب بانکی</p>
+              </div>
+            </div>
+            <button onclick="resetAllTxFilters()" class="text-xs text-rose-500 hover:text-rose-700 font-medium">بازنشانی فیلترها 🔄</button>
+          </div>
+
+          <!-- جعبه فیلتر پیشرفته بر اساس روز، ماه، سال و بانک -->
+          <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200/70 mb-4 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">مرتب‌سازی بر اساس:</label>
+                <select id="filter-sort-by" onchange="renderFilteredTransactions()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium">
+                  <option value="date-desc">📅 تاریخ: از جدید به قدیم</option>
+                  <option value="date-asc">📅 تاریخ: از قدیم به جدید</option>
+                  <option value="amount-desc">💸 مبلغ: از بیشترین به کمترین</option>
+                  <option value="amount-asc">💸 مبلغ: از کمترین به بیشترین</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">حساب بانکی:</label>
+                <select id="filter-account" onchange="renderFilteredTransactions()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium">
+                  <option value="all">همه حساب‌ها</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">نوع تراکنش:</label>
+                <select id="filter-type" onchange="renderFilteredTransactions()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium">
+                  <option value="all">همه نوع‌ها</option>
+                  <option value="expense">فقط هزینه‌ها</option>
+                  <option value="income">فقط درآمدها</option>
+                  <option value="transfer">فقط انتقال بین‌حساب‌ها</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">جستجو در شرح:</label>
+                <input id="filter-search-text" type="text" oninput="renderFilteredTransactions()" placeholder="عنوان، زیربخش یا شرح..." class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
+              </div>
+            </div>
+
+            <!-- فیلتر تفکیک‌شده تقویم شمسی (سال، ماه، روز) -->
+            <div class="border-t border-slate-200/60 pt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">📅 سال شمسی:</label>
+                <select id="filter-year" onchange="renderFilteredTransactions()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium">
+                  <option value="all">همه سال‌ها</option>
+                </select>
+              </div>
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">📅 ماه شمسی:</label>
+                <select id="filter-month" onchange="renderFilteredTransactions()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium">
+                  <option value="all">همه ماه‌ها</option>
+                </select>
+              </div>
+              <div>
+                <label class="block mb-1 text-slate-600 font-medium">📅 روز ماه:</label>
+                <select id="filter-day" onchange="renderFilteredTransactions()" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium">
+                  <option value="all">همه روزها</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-xs text-slate-500 mb-2 px-1">
+            <span>تعداد تراکنش‌های یافت‌شده: <strong id="filtered-tx-count" class="text-slate-800">0</strong></span>
+            <span>مجموع مبالغ لیست: <strong id="filtered-tx-sum" class="text-emerald-600">0 تومان</strong></span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-50 text-slate-500 border-b border-slate-100">
+                <tr>
+                  <th class="py-2.5 px-3">نوع / دسته‌بندی</th>
+                  <th class="py-2.5 px-3">حساب</th>
+                  <th class="py-2.5 px-3">توضیحات</th>
+                  <th class="py-2.5 px-3">مبلغ (تومان)</th>
+                  <th class="py-2.5 px-3">تاریخ شمسی</th>
+                  <th class="py-2.5 px-3 text-center">عملیات</th>
+                </tr>
+              </thead>
+              <tbody id="all-transactions-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -812,6 +837,7 @@
       initBankSelects();
       initShamsiSelectors();
       initCategorySelects();
+      initDateFilterSelects();
 
       const { data: { session } } = await client.auth.getSession();
       if (session) {
@@ -877,6 +903,32 @@
       shamsiMonths.forEach((m, idx) => {
         repMonthSel.innerHTML += `<option value="${currentSh.jy}-${idx + 1}" ${idx + 1 === currentSh.jm ? 'selected' : ''}>${m} ${currentSh.jy}</option>`;
       });
+    }
+
+    // مقداردهی گزینه‌های فیلتر تقویم شمسی در تب همه تراکنش‌ها
+    function initDateFilterSelects() {
+      const currentSh = getTodayShamsi();
+
+      // سال‌ها (از ۲ سال قبل تا ۳ سال بعد)
+      const yearSel = document.getElementById('filter-year');
+      yearSel.innerHTML = '<option value="all">همه سال‌ها</option>';
+      for (let y = currentSh.jy - 2; y <= currentSh.jy + 3; y++) {
+        yearSel.innerHTML += `<option value="${y}">${y}</option>`;
+      }
+
+      // ماه‌ها
+      const monthSel = document.getElementById('filter-month');
+      monthSel.innerHTML = '<option value="all">همه ماه‌ها</option>';
+      shamsiMonths.forEach((m, idx) => {
+        monthSel.innerHTML += `<option value="${idx + 1}">${m}</option>`;
+      });
+
+      // روزها (۱ تا ۳۱)
+      const daySel = document.getElementById('filter-day');
+      daySel.innerHTML = '<option value="all">همه روزها</option>';
+      for (let d = 1; d <= 31; d++) {
+        daySel.innerHTML += `<option value="${d}">${d}</option>`;
+      }
     }
 
     function initCategorySelects() {
@@ -1403,12 +1455,18 @@
       switchTab('dashboard');
     }
 
+    // واکشی اطلاعات داشبورد، اصلاح قطعی نمایش حساب‌های پرتکرار با موجودی دقیق
     async function loadDashboardStats() {
       const { data: txs } = await client.from('transactions').select('*').order('transaction_date', { ascending: false });
       allTransactions = txs || [];
 
       let totalInc = 0, totalExp = 0;
       const accUsage = {};
+
+      // مقداردهی اولیه برای تمام حساب‌ها تا شمارش حتی برای بدون تراکنش‌ها صفر باشد
+      currentAccounts.forEach(acc => {
+        accUsage[acc.id] = 0;
+      });
 
       allTransactions.forEach(t => {
         const val = parseFloat(t.amount);
@@ -1426,13 +1484,18 @@
       document.getElementById('dash-total-income').innerText = `${Number(totalInc).toLocaleString('fa-IR')} تومان`;
       document.getElementById('dash-total-expense').innerText = `${Number(totalExp).toLocaleString('fa-IR')} تومان`;
 
-      // لیست عمودی حساب‌های پرتکرار (مرتب شده بر مبنای بیشترین تراکنش با موجودی کاملاً آپدیت)
-      const sortedAccs = [...currentAccounts].sort((a, b) => (accUsage[b.id] || 0) - (accUsage[a.id] || 0)).slice(0, 5);
+      // مرتب‌سازی حساب‌ها بر اساس بیشترین تراکنش با موجودی کاملاً دقیق و آپدیت
+      const sortedAccs = [...currentAccounts].sort((a, b) => {
+        const countA = accUsage[a.id] || 0;
+        const countB = accUsage[b.id] || 0;
+        return countB - countA;
+      }).slice(0, 5);
+
       const freqContainer = document.getElementById('frequent-accounts-list');
       freqContainer.innerHTML = '';
 
       if (sortedAccs.length === 0) {
-        freqContainer.innerHTML = '<p class="text-xs text-slate-400 py-3 text-center">هنوز حسابی تعریف نشده است.</p>';
+        freqContainer.innerHTML = '<p class="text-xs text-slate-400 py-3 text-center">هنوز حسابی تعریف نکرده‌اید.</p>';
       } else {
         sortedAccs.forEach(acc => {
           const usageCount = accUsage[acc.id] || 0;
@@ -1496,12 +1559,17 @@
       });
     }
 
-    // ۴. مدیریت بخش جامع "همه تراکنش‌ها" (فیلترها و مرتب‌سازی)
+    // ۴. بخش جامع "همه تراکنش‌ها" با فیلتر روز، ماه، سال و بانک
     function renderFilteredTransactions() {
       const sortBy = document.getElementById('filter-sort-by').value;
       const accountFilter = document.getElementById('filter-account').value;
       const typeFilter = document.getElementById('filter-type').value;
       const searchText = document.getElementById('filter-search-text').value.trim().toLowerCase();
+
+      // فیلترهای سال، ماه و روز شمسی
+      const yearFilter = document.getElementById('filter-year').value;
+      const monthFilter = document.getElementById('filter-month').value;
+      const dayFilter = document.getElementById('filter-day').value;
 
       let list = [...allTransactions];
 
@@ -1528,6 +1596,17 @@
         });
       }
 
+      // فیلتر تقویمی شمسی (سال، ماه، روز)
+      if (yearFilter !== 'all' || monthFilter !== 'all' || dayFilter !== 'all') {
+        list = list.filter(t => {
+          const sh = parseIsoToShamsi(t.transaction_date);
+          if (yearFilter !== 'all' && sh.jy !== parseInt(yearFilter, 10)) return false;
+          if (monthFilter !== 'all' && sh.jm !== parseInt(monthFilter, 10)) return false;
+          if (dayFilter !== 'all' && sh.jd !== parseInt(dayFilter, 10)) return false;
+          return true;
+        });
+      }
+
       // مرتب‌سازی
       if (sortBy === 'date-desc') {
         list.sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date));
@@ -1539,7 +1618,6 @@
         list.sort((a, b) => parseFloat(a.amount) - parseFloat(b.amount));
       }
 
-      // آپدیت شمارنده‌ها
       document.getElementById('filtered-tx-count').innerText = list.length;
       let totalSum = list.reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
       document.getElementById('filtered-tx-sum').innerText = `${Number(totalSum).toLocaleString('fa-IR')} تومان`;
@@ -1596,6 +1674,9 @@
       document.getElementById('filter-account').value = 'all';
       document.getElementById('filter-type').value = 'all';
       document.getElementById('filter-search-text').value = '';
+      document.getElementById('filter-year').value = 'all';
+      document.getElementById('filter-month').value = 'all';
+      document.getElementById('filter-day').value = 'all';
       renderFilteredTransactions();
     }
 
